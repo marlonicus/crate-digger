@@ -2,7 +2,6 @@ import { Scene } from "aframe-react"
 import { map } from "ramda"
 import spotify from "../utils/spotify"
 import Room from "../components/room"
-import Lights from "../components/lights"
 import Crate from "../components/crate"
 import Records from "../components/records"
 import Camera from "../components/camera"
@@ -31,9 +30,8 @@ class PlayTemplate extends React.Component {
 
 	render() {
 		return (
-			<Scene light={{defaultLightsEnabled: false}}>
-				<Lights />
-				<Room />
+			<Scene>
+				<Room showTurtle={true} />
 				<Crate />
 				{ this.state.userData && <Records tracks={map(getRecordFromTrackItem, this.state.userData.items)} /> }
 				<Camera />
