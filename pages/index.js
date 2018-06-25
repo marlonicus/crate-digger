@@ -2,6 +2,7 @@ if (typeof window !== "undefined") {
   require('aframe')
   require('aframe-react')
   require('aframe-event-set-component')
+  require('aframe-star-system-component')
 }
 
 import queryString from 'query-string'

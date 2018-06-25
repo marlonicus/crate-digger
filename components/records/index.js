@@ -5,16 +5,16 @@ const mapIndexed = addIndex(map)
 
 const Asset = ({ id, src }) => <img id={id} src={src} />
 
-const baseRecordPosition = -2.3886948626848357
+const baseRecordPosition = -2.7
 const recordSize = 0.65
 
 const Record = ({ id, src }, index) => (
 	<Entity
-		geometry={{ primitive: "plane", width: recordSize, height: recordSize }}
+		geometry={{ primitive: "box", width: recordSize, height: recordSize, depth: 0.01 }}
 		material={{ src, side: 'double' }}
 		scale={{ x: 2, y: 2, z: 2 }}
-		position={`${baseRecordPosition - (index / 20)} 0.34330848836327094 -6.7`}
-		rotation="-15 83.63000000000001 0"
+		position={`${baseRecordPosition - (index / 25)} 0.34330848836327094 -6.7`}
+		rotation="-15 85.66 0"
 	/>
 )
 
