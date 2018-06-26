@@ -5,6 +5,8 @@ import Room from "../components/room"
 import Crate from "../components/crate"
 import Records from "../components/records"
 import Camera from "../components/camera"
+import { checkTestMode } from "../utils/misc"
+import { userData as mockUserData } from "../data/mock"
 
 const getRecordFromTrackItem = ({ id, images, name }) => ({
 	id, 
@@ -19,6 +21,12 @@ class PlayTemplate extends React.Component {
 	}
 
 	componentDidMount = async () => {
+		if (checkTestMode(window)) {
+			return this.setState({
+				userData: mockUserData,
+			})
+		}
+		
 		const userData = await spotify.getTopArtists({
 			accessToken: this.props.accessToken,
 		})

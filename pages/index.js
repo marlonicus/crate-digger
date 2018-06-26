@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 if (typeof window !== "undefined") {
 	require("aframe")
 	require("aframe-react")
@@ -6,20 +8,10 @@ if (typeof window !== "undefined") {
 	require("aframe-star-system-component")
 }
 
-import queryString from "query-string"
-import { propOr, pathOr, pipe } from "ramda"
 import LoginTemplate from "../templates/login"
 import PlayTemplate from "../templates/play"
 import ResetCSS from "../components/reset-css"
-
-const getLocationHash = pathOr("", ["location", "hash"])
-const getAccessToken = propOr(false, "access_token")
-
-const checkUserIsLoggedIn = pipe(
-	getLocationHash,
-	queryString.parse,
-	getAccessToken,
-)
+import { checkUserIsLoggedIn, checkTestMode } from "../utils/misc"
 
 export default class Page extends React.Component {
 	constructor() {
@@ -34,7 +26,7 @@ export default class Page extends React.Component {
 	componentDidMount() {
 		this.setState({
 			mounted: true,
-			isLoggedIn: checkUserIsLoggedIn(window),
+			isLoggedIn: checkUserIsLoggedIn(window) || checkTestMode(window),
 		})
 	}
 
