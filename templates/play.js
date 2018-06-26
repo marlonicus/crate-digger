@@ -38,7 +38,7 @@ class PlayTemplate extends React.Component {
 
 	render() {
 		return (
-			<Scene>
+			<Scene vr-mode-ui={{enabled: true}}>
 				<Room showTurtle={true} />
 				<Crate />
 				{ this.state.userData && <Records tracks={map(getRecordFromTrackItem, this.state.userData.items)} /> }
