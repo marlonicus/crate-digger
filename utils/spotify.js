@@ -4,7 +4,7 @@ import { pick } from 'ramda'
 const loginParams = {
   client_id: `235bc1f2864a44f0b632987308433ca8`,
   response_type: `token`,
-  redirect_uri: `http://127.0.0.1:3000/`,
+  redirect_uri: `https://crate-digger.netlify.com`,
   scope: `user-top-read`
 }
 
