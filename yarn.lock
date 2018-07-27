@@ -606,9 +606,9 @@ acorn@^5.0.0, acorn@^5.2.1:
   version "5.6.2"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.6.2.tgz#b1da1d7be2ac1b4a327fb9eab851702c5045b4e7"
 
-aframe-animation-component@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/aframe-animation-component/-/aframe-animation-component-4.2.0.tgz#d7f64e7041a303b125e87891385a6de8ed26e0fd"
+aframe-animation-component@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/aframe-animation-component/-/aframe-animation-component-5.1.0.tgz#b3821c59f4ad591010fc2582d16e2610a713abe7"
   dependencies:
     animejs "2.2.0"
 

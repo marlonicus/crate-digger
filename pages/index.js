@@ -4,8 +4,8 @@ if (typeof window !== "undefined") {
 	require("aframe")
 	require("aframe-react")
 	require("aframe-event-set-component")
-	require("aframe-animation-component")
 	require("aframe-star-system-component")
+	require('aframe-animation-component');
 }
 
 import LoginTemplate from "../templates/login"
@@ -33,10 +33,6 @@ export default class Page extends React.Component {
 	render() {
 		return (
 			<main>
-				<link
-					href="https://fonts.googleapis.com/css?family=Luckiest+Guy"
-					rel="stylesheet"
-				/>
 				<ResetCSS />
 
 				{this.state.isLoggedIn ? (
