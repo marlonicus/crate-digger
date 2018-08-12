@@ -2,7 +2,7 @@ import { Entity } from "aframe-react";
 import { map, addIndex, partial, head } from "ramda";
 import { mapIndexed } from "../../utils/misc";
 
-const baseRecordPosition = -2.7;
+const baseRecordPosition = 0.22;
 const recordSize = 0.65;
 
 const RecordSleeveEntity = props => (
@@ -49,28 +49,30 @@ class Record extends React.Component {
       id,
       isPeekingEnabled,
       isSelected,
+      isOpen,
       src,
       index,
       color,
-      onClick,
+      onSelect,
+      onOpen,
       onClose
     } = this.props;
 
-    const yPos = 0.34330848836327094;
-    const xPos = baseRecordPosition - index / 25;
+    const yPos = -0.22;
+    const xPos = baseRecordPosition - index / 50;
 
     return (
       <Entity
-        position={`${xPos} ${yPos} -6.7`}
-        scale={{ x: 2, y: 2, z: 2 }}
-        rotation="-15 85.66 0"
+        position={`${xPos} ${yPos} 0`}
+        scale={{ x: 1, y: 1, z: 1 }}
+        rotation={`15 265.65 180`}
       >
         {/* Hit area for peeking */}
         <RecordSleeveEntity
           material="shader: flat; opacity: 0; color: #0000ff"
           className="clickable"
           events={{
-            click: () => onClick(index),
+            click: () => onSelect(index),
             mouseenter: () => this.setState({ peek: true }),
             mouseleave: () => this.setState({ peek: false })
           }}
@@ -78,8 +80,11 @@ class Record extends React.Component {
 
         {/* Sleeve art */}
         <RecordSleeveEntity
-          material={{ src, side: 'double' }}
-          className={`${isSelected && 'clickable'}`}
+          material={{ src, side: "double" }}
+          className={`${isSelected && "clickable"}`}
+          events={{
+            click: () => isSelected && onOpen(index)
+          }}
           animation__peek-rotate-sideways={{
             property: "rotation",
             to: `0 0 ${isPeekingEnabled && this.state.peek ? "5" : "0"}`,
@@ -109,31 +114,75 @@ class Record extends React.Component {
             <CloseButton className="clickable" events={{ click: onClose }} />
           )}
         </RecordSleeveEntity>
+
+        {/* Vinyl disc */}
+        {isOpen && (
+          <Entity
+            geometry={{
+              primitive: "circle",
+              radius: 0.3
+            }}
+            rotation="0 0 0"
+            position="-0.016 0.6635028876078138 0.00485874037035066"
+            material="side: double"
+            animation__active-slide-out={{
+              property: "position",
+              to: "-0.24821838023253517 0.7072501217878021 0.003737822410264894",
+              loop: false,
+              dur: 100,
+              delay: 0,
+              dir: "alternate"
+            }}
+          />
+        )}
       </Entity>
     );
   }
 }
 
 const renderRecord = (
-  { activeIndex, onRecordSelect, onRecordClose },
+  {
+    viewingRecordIndex,
+    openRecordIndex,
+    onRecordSelect,
+    onRecordClose,
+    onRecordOpen
+  },
   trackData,
   index
 ) => (
   <Record
     {...trackData}
-    isPeekingEnabled={index !== activeIndex}
-    isSelected={index === activeIndex}
-    onClick={onRecordSelect}
+    isPeekingEnabled={index !== viewingRecordIndex}
+    isSelected={index === viewingRecordIndex}
+    isOpen={openRecordIndex === index}
+    onSelect={onRecordSelect}
+    onOpen={onRecordOpen}
     onClose={onRecordClose}
     key={index}
     index={index}
   />
 );
 
-export default ({ tracks, activeIndex, onRecordSelect, onRecordClose }) => (
+export default ({
+  tracks,
+  viewingRecordIndex,
+  openRecordIndex,
+  onRecordSelect,
+  onRecordClose,
+  onRecordOpen
+}) => (
   <React.Fragment>
     {mapIndexed(
-      partial(renderRecord, [{ activeIndex, onRecordSelect, onRecordClose }]),
+      partial(renderRecord, [
+        {
+          viewingRecordIndex,
+          openRecordIndex,
+          onRecordSelect,
+          onRecordClose,
+          onRecordOpen
+        }
+      ]),
       tracks
     )}
   </React.Fragment>

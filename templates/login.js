@@ -30,14 +30,14 @@ const LoginTemplate = () => (
 				font-size: 4em;
         cursor: pointer;
 			}
-      
+
       button:hover {
         color: grey;
       }
 		`}</style>
 
-		<h1>Crate Digger</h1>
-		<button onClick={spotify.login}>Enter</button>
+		{/* <h1>Crate Digger</h1> */}
+		<button onClick={spotify.login}>Dig</button>
 	</main>
 )
 

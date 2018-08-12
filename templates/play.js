@@ -5,6 +5,7 @@ import Room from "../components/room";
 import Crate from "../components/crate";
 import Records from "../components/records";
 import Camera from "../components/camera";
+import Turntable from "../components/turntable";
 import { checkTestMode, getRandomColor } from "../utils/misc";
 import { userData as mockUserData } from "../data/mock";
 
@@ -25,7 +26,8 @@ class PlayTemplate extends React.Component {
     super();
 
     this.state = {
-      activeRecordIndex: false
+      viewingRecordIndex: false,
+      openRecordIndex: false,
     };
   }
 
@@ -49,14 +51,20 @@ class PlayTemplate extends React.Component {
     return pathOr(0, ["state", "userData", "items", "length"], this);
   }
 
-  switchRecord(index) {
+  viewRecord(index) {
     this.setState({
-      activeRecordIndex: index
+      viewingRecordIndex: index
     });
   }
 
   closeRecord() {
-    this.setState({ activeRecordIndex: false });
+    this.setState({ viewingRecordIndex: false });
+  }
+
+  openRecord(index) {
+    this.setState({
+      openRecordIndex: index,
+    })
   }
 
   render() {
@@ -67,15 +75,21 @@ class PlayTemplate extends React.Component {
         raycaster="objects: .clickable"
       >
         <Room showTurtle={true} />
-        <Crate />
-        {this.state.userData && (
-          <Records
-            activeIndex={this.state.activeRecordIndex}
-            onRecordSelect={bind(this.switchRecord, this)}
-            onRecordClose={bind(this.closeRecord, this)}
-            tracks={map(getRecordFromTrackItem, this.state.userData.items)}
-          />
-        )}
+
+        <Crate>
+          {this.state.userData && (
+            <Records
+              viewingRecordIndex={this.state.viewingRecordIndex}
+              openRecordIndex={this.state.openRecordIndex}
+              onRecordSelect={bind(this.viewRecord, this)}
+              onRecordClose={bind(this.closeRecord, this)}
+              onRecordOpen={bind(this.openRecord, this)}
+              tracks={map(getRecordFromTrackItem, this.state.userData.items)}
+            />
+          )}
+        </Crate>
+
+        {/* <Turntable /> */}
         <Camera />
       </Scene>
     );
