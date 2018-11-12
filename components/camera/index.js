@@ -11,8 +11,8 @@ class Camera extends Component {
       <Entity
         primitive='a-camera'
         look-controls
-        position='-2.472 1.6 -4.328'
-        rotation='-15.355000000000002 -1.375 0'
+        position='0.118 1.600 45.623'
+        rotation='-6.532 0.344 0'
         wasd-controls={false}
       >
         <Entity

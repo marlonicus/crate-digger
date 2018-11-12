@@ -1,3 +1,3 @@
 export default () => (
-  <a-sky color='black' />
+  <a-sky color='white' />
 )
