@@ -6,6 +6,20 @@ import { mapIndexed } from '../../utils/misc'
 const baseRecordPosition = 0.22
 const recordSize = 0.65
 
+const AudioManager = (() => {
+  if (typeof window === 'undefined') return false
+
+  const whoosh = new Audio('/static/sounds/whoosh.mp3')
+  whoosh.volume = 0.4
+
+  const swipe = new Audio('/static/sounds/swipe.mp3')
+
+  return {
+    whoosh: () => whoosh.play(),
+    swipe: () => swipe.play()
+  }
+})()
+
 const RecordSleeveEntity = props => (
   <Entity
     geometry={{
@@ -22,18 +36,18 @@ const RecordSleeveEntity = props => (
 
 const CloseButton = props => (
   <Entity
-    text={{
-      value: 'x'
-    }}
-    position='0.26 0.26 0.01'
+    position='0.28 0.28 0.01'
     geometry={{
       primitive: 'plane',
-      width: '0.1',
-      height: '0.1'
+      width: '0.05',
+      height: '0.05w',
+      color: '#ffff00'
     }}
+    material={{ color: 'black', roughness: 0.5 }}
     {...props}
-    color='#ffff00'
-  />
+  >
+    <Entity text={{ value: 'x' }} position='0.482 0.005 0' />
+  </Entity>
 )
 
 class Record extends Component {
@@ -49,12 +63,12 @@ class Record extends Component {
     const {
       isPeekingEnabled,
       isSelected,
-      isOpen,
       src,
       index,
       onSelect,
       onOpen,
-      onClose
+      onClose,
+      whooshEnabled
     } = this.props
 
     const yPos = -0.22
@@ -71,9 +85,17 @@ class Record extends Component {
           material='shader: flat; opacity: 0; color: #0000ff'
           className='clickable'
           events={{
-            click: () => onSelect(index),
-            mouseenter: () => this.setState({ peek: true }),
-            mouseleave: () => this.setState({ peek: false })
+            click: () => {
+              AudioManager.swipe()
+              onSelect(index)
+            },
+            mouseenter: () => {
+              if (whooshEnabled) AudioManager.whoosh()
+              this.setState({ peek: true })
+            },
+            mouseleave: () => {
+              this.setState({ peek: false })
+            }
           }}
         />
 
@@ -104,7 +126,7 @@ class Record extends Component {
             property: 'position',
             to: `0 ${isSelected ? '0.7' : '0'} 0`,
             loop: false,
-            dur: 100,
+            dur: 500,
             delay: 0,
             dir: 'alternate'
           }}
@@ -113,26 +135,6 @@ class Record extends Component {
             <CloseButton className='clickable' events={{ click: onClose }} />
           )}
         </RecordSleeveEntity>
-
-        {/* Vinyl disc */}
-        {isOpen && (
-          <Entity
-            geometry={{
-              primitive: 'circle',
-              radius: 0.3
-            }}
-            rotation='0 0 0'
-            position='-0.016 0.6635028876078138 0.00485874037035066'
-            material='side: double'
-            animation__active-slide-out={{
-              property: 'position',
-              to: '-0.24821838023253517 0.7072501217878021 0.003737822410264894',
-              loop: false,
-              dur: 100,
-              delay: 0,
-              dir: 'alternate'
-            }}
-          />
         )}
       </Entity>
     )
@@ -154,6 +156,7 @@ const renderRecord = (
     {...trackData}
     isPeekingEnabled={index !== viewingRecordIndex}
     isSelected={index === viewingRecordIndex}
+    whooshEnabled={viewingRecordIndex === false}
     isOpen={openRecordIndex === index}
     onSelect={onRecordSelect}
     onOpen={onRecordOpen}

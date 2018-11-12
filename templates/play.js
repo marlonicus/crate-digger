@@ -38,6 +38,16 @@ class PlayTemplate extends React.Component {
       });
     }
 
+    const footsteps = new Audio('/static/sounds/footsteps.mp3');
+    document.addEventListener("keydown", () => {
+      footsteps.play();
+    });
+
+    document.addEventListener("keyup", () => {
+      footsteps.pause();
+    });
+
+
     const userData = await spotify.getTopArtists({
       accessToken: this.props.accessToken
     });

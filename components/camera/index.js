@@ -12,8 +12,9 @@ class Camera extends Component {
         primitive='a-camera'
         look-controls
         position='0.118 1.600 45.623'
+        // position='0.118 1.600 0.623'
         rotation='-6.532 0.344 0'
-        wasd-controls={false}
+        wasd-controls
       >
         <Entity
           // @TODO: Enable on mobile only
