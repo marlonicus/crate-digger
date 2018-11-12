@@ -1,16 +1,16 @@
+/* global fetch */
 import queryString from 'query-string'
-import { pick } from 'ramda'
 
 const loginParams = {
-  client_id: `235bc1f2864a44f0b632987308433ca8`,
+  client_id: process.env.SPOTIFY_CLIENT_ID,
   response_type: `token`,
   redirect_uri: process.env.SPOTIFY_LOGIN_REDIRECT_URL,
   scope: `user-top-read`
 }
 
 const endpoints = {
-  login: `https://accounts.spotify.com/authorize?${ queryString.stringify(loginParams) }`,
-  topArtists: `https://api.spotify.com/v1/me/top/artists`,
+  login: `https://accounts.spotify.com/authorize?${queryString.stringify(loginParams)}`,
+  topArtists: `https://api.spotify.com/v1/me/top/artists`
 }
 
 const getHeaders = ({ accessToken }) => ({
@@ -20,10 +20,10 @@ const getHeaders = ({ accessToken }) => ({
 })
 
 export default {
-  login: () => location.href = endpoints.login,
-  
+  login: () => { window.location.href = endpoints.login },
+
   getTopArtists: async ({ accessToken }) => {
     const response = await fetch(endpoints.topArtists, getHeaders({ accessToken }))
-    return await response.json()
+    return response.json()
   }
 }

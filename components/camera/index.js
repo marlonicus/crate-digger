@@ -1,16 +1,19 @@
-import { Entity } from "aframe-react";
+import { Component } from 'react'
+import { Entity } from 'aframe-react'
 
-class Camera extends React.Component {
-  shouldComponentUpdate(nextProps, nextState) {
-    return false;
+class Camera extends Component {
+  shouldComponentUpdate (nextProps, nextState) {
+    return false
   }
-  render() {
+
+  render () {
     return (
       <Entity
-        primitive="a-camera"
+        primitive='a-camera'
         look-controls
-        position="-0.6334362143461938 1.6 -6.065501095741615"
-        rotation="180 180 0"
+        position='-2.472 1.6 -4.328'
+        rotation='-15.355000000000002 -1.375 0'
+        wasd-controls={false}
       >
         <Entity
           // @TODO: Enable on mobile only
@@ -21,8 +24,8 @@ class Camera extends React.Component {
           // material="color: white; shader: flat"
         />
       </Entity>
-    );
+    )
   }
 }
 
-export default Camera;
+export default Camera

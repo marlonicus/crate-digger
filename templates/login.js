@@ -1,25 +1,13 @@
-import { Scene } from "aframe-react"
-import { map } from "ramda"
-import spotify from "../utils/spotify"
-import Room from "../components/room"
-import Camera from "../components/room"
+import spotify from '../utils/spotify'
 
 const LoginTemplate = () => (
-	<main>
-		<style jsx>{`
+  <main>
+    <style jsx>{`
 			main {
-				background: url(/static/images/star-background.gif);
-				background-size: cover;
-				background-position: center center;
 				display: flex;
 				justify-content: space-around;
 				align-items: center;
 				flex-direction: column;
-			}
-
-			h1 {
-				font-size: 8em;
-        margin-top: 5rem;
 			}
 
 			button {
@@ -36,9 +24,8 @@ const LoginTemplate = () => (
       }
 		`}</style>
 
-		{/* <h1>Crate Digger</h1> */}
-		<button onClick={spotify.login}>Dig</button>
-	</main>
+    <button onClick={spotify.login}>Dig</button>
+  </main>
 )
 
 export default LoginTemplate

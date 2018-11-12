@@ -1,65 +1,64 @@
-import { Entity } from "aframe-react";
-import { map, addIndex, partial, head } from "ramda";
-import { mapIndexed } from "../../utils/misc";
+import { Component, Fragment } from 'react'
+import { Entity } from 'aframe-react'
+import { partial } from 'ramda'
+import { mapIndexed } from '../../utils/misc'
 
-const baseRecordPosition = 0.22;
-const recordSize = 0.65;
+const baseRecordPosition = 0.22
+const recordSize = 0.65
 
 const RecordSleeveEntity = props => (
   <Entity
     geometry={{
-      primitive: "box",
+      primitive: 'box',
       width: recordSize,
       height: recordSize,
       depth: 0.01
     }}
-    position="0 0 0"
-    rotation="0 0 0"
+    position='0 0 0'
+    rotation='0 0 0'
     {...props}
   />
-);
+)
 
 const CloseButton = props => (
   <Entity
     text={{
-      value: "x"
+      value: 'x'
     }}
-    position="0.26 0.26 0.01"
-    color="#ffff00"
+    position='0.26 0.26 0.01'
     geometry={{
-      primitive: "plane",
-      width: "0.1",
-      height: "0.1"
+      primitive: 'plane',
+      width: '0.1',
+      height: '0.1'
     }}
     {...props}
+    color='#ffff00'
   />
-);
+)
 
-class Record extends React.Component {
-  constructor() {
-    super();
+class Record extends Component {
+  constructor () {
+    super()
 
     this.state = {
       peek: false
-    };
+    }
   }
 
-  render() {
+  render () {
     const {
-      id,
       isPeekingEnabled,
       isSelected,
       isOpen,
       src,
       index,
-      color,
       onSelect,
       onOpen,
       onClose
-    } = this.props;
+    } = this.props
 
-    const yPos = -0.22;
-    const xPos = baseRecordPosition - index / 50;
+    const yPos = -0.22
+    const xPos = baseRecordPosition - index / 50
 
     return (
       <Entity
@@ -69,8 +68,8 @@ class Record extends React.Component {
       >
         {/* Hit area for peeking */}
         <RecordSleeveEntity
-          material="shader: flat; opacity: 0; color: #0000ff"
-          className="clickable"
+          material='shader: flat; opacity: 0; color: #0000ff'
+          className='clickable'
           events={{
             click: () => onSelect(index),
             mouseenter: () => this.setState({ peek: true }),
@@ -80,38 +79,38 @@ class Record extends React.Component {
 
         {/* Sleeve art */}
         <RecordSleeveEntity
-          material={{ src, side: "double" }}
-          className={`${isSelected && "clickable"}`}
+          material={{ src, side: 'double' }}
+          className={`${isSelected && 'clickable'}`}
           events={{
             click: () => isSelected && onOpen(index)
           }}
           animation__peek-rotate-sideways={{
-            property: "rotation",
-            to: `0 0 ${isPeekingEnabled && this.state.peek ? "5" : "0"}`,
+            property: 'rotation',
+            to: `0 0 ${isPeekingEnabled && this.state.peek ? '5' : '0'}`,
             loop: false,
             dur: 100,
             delay: 0,
-            dir: "alternate"
+            dir: 'alternate'
           }}
           animation__peek-slide-up={{
-            property: "position",
-            to: `0 ${isPeekingEnabled && this.state.peek ? "0.05" : "0"} 0`,
+            property: 'position',
+            to: `0 ${isPeekingEnabled && this.state.peek ? '0.05' : '0'} 0`,
             loop: false,
             dur: 100,
             delay: 0,
-            dir: "alternate"
+            dir: 'alternate'
           }}
           animation__active-slide-up={{
-            property: "position",
-            to: `0 ${isSelected ? "0.7" : "0"} 0`,
+            property: 'position',
+            to: `0 ${isSelected ? '0.7' : '0'} 0`,
             loop: false,
             dur: 100,
             delay: 0,
-            dir: "alternate"
+            dir: 'alternate'
           }}
         >
           {isSelected && (
-            <CloseButton className="clickable" events={{ click: onClose }} />
+            <CloseButton className='clickable' events={{ click: onClose }} />
           )}
         </RecordSleeveEntity>
 
@@ -119,24 +118,24 @@ class Record extends React.Component {
         {isOpen && (
           <Entity
             geometry={{
-              primitive: "circle",
+              primitive: 'circle',
               radius: 0.3
             }}
-            rotation="0 0 0"
-            position="-0.016 0.6635028876078138 0.00485874037035066"
-            material="side: double"
+            rotation='0 0 0'
+            position='-0.016 0.6635028876078138 0.00485874037035066'
+            material='side: double'
             animation__active-slide-out={{
-              property: "position",
-              to: "-0.24821838023253517 0.7072501217878021 0.003737822410264894",
+              property: 'position',
+              to: '-0.24821838023253517 0.7072501217878021 0.003737822410264894',
               loop: false,
               dur: 100,
               delay: 0,
-              dir: "alternate"
+              dir: 'alternate'
             }}
           />
         )}
       </Entity>
-    );
+    )
   }
 }
 
@@ -162,7 +161,7 @@ const renderRecord = (
     key={index}
     index={index}
   />
-);
+)
 
 export default ({
   tracks,
@@ -172,7 +171,7 @@ export default ({
   onRecordClose,
   onRecordOpen
 }) => (
-  <React.Fragment>
+  <Fragment>
     {mapIndexed(
       partial(renderRecord, [
         {
@@ -185,5 +184,5 @@ export default ({
       ]),
       tracks
     )}
-  </React.Fragment>
-);
+  </Fragment>
+)

@@ -89,7 +89,7 @@ class PlayTemplate extends React.Component {
           )}
         </Crate>
 
-        {/* <Turntable /> */}
+        <Turntable />
         <Camera />
       </Scene>
     );
