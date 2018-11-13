@@ -6,18 +6,13 @@ import Crate from "../components/crate";
 import Records from "../components/records";
 import Camera from "../components/camera";
 import Turntable from "../components/turntable";
-import { checkTestMode, getRandomColor } from "../utils/misc";
+import { checkTestMode } from "../utils/misc";
+import SoundManager from "../utils/sound";
 import { userData as mockUserData } from "../data/mock";
 
-const addColoursToRecordItems = userData => ({
-  ...userData,
-  items: map(item => ({ ...item, color: getRandomColor() }), userData.items)
-});
-
-const getRecordFromTrackItem = ({ id, images, name, color }) => ({
+const getRecordFromTrackItem = ({ id, images, name }) => ({
   id,
   name,
-  color,
   src: images[1].url
 });
 
@@ -27,33 +22,35 @@ class PlayTemplate extends React.Component {
 
     this.state = {
       viewingRecordIndex: false,
-      openRecordIndex: false,
+      openRecordIndex: false
     };
   }
 
   componentDidMount = async () => {
-    if (checkTestMode(window)) {
-      return this.setState({
-        userData: addColoursToRecordItems(mockUserData)
-      });
-    }
-
-    const footsteps = new Audio('/static/sounds/footsteps.mp3');
     document.addEventListener("keydown", () => {
-      footsteps.play();
+      SoundManager.footsteps();
     });
 
     document.addEventListener("keyup", () => {
-      footsteps.pause();
+      SoundManager.footsteps({ stop: true });
     });
 
+    spotify.connect({
+      accessToken: this.props.accessToken,
+      callback: player => {
+        spotify.play({
+          playerInstance: player,
+          spotify_uri: "spotify:artist:2d0hyoQ5ynDBnkvAbJKORj"
+        });
+      }
+    });
 
     const userData = await spotify.getTopArtists({
       accessToken: this.props.accessToken
     });
 
     this.setState({
-      userData: addColoursToRecordItems(userData)
+      userData
     });
   };
 
@@ -73,8 +70,8 @@ class PlayTemplate extends React.Component {
 
   openRecord(index) {
     this.setState({
-      openRecordIndex: index,
-    })
+      openRecordIndex: index
+    });
   }
 
   render() {

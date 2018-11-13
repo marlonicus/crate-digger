@@ -1,28 +1,26 @@
-require('dotenv').config()
-
-import LoginTemplate from '../templates/login'
-import PlayTemplate from '../templates/play'
-import ResetCSS from '../components/reset-css'
-import { checkUserIsLoggedIn, checkTestMode } from '../utils/misc'
+import LoginTemplate from "../templates/login";
+import PlayTemplate from "../templates/play";
+import ResetCSS from "../components/reset-css";
+import { checkUserIsLoggedIn, checkTestMode } from "../utils/misc";
 
 export default class Page extends React.Component {
-  constructor () {
-    super()
+  constructor() {
+    super();
 
     this.state = {
       isLoggedIn: false,
       mounted: false
-    }
+    };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setState({
       mounted: true,
       isLoggedIn: checkUserIsLoggedIn(window) || checkTestMode(window)
-    })
+    });
   }
 
-  render () {
+  render() {
     return (
       <main>
         <ResetCSS />
@@ -35,6 +33,6 @@ export default class Page extends React.Component {
           <div />
         )}
       </main>
-    )
+    );
   }
 }
