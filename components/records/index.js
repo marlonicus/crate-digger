@@ -54,8 +54,7 @@ class Record extends Component {
       index,
       onSelect,
       onOpen,
-      onClose,
-      whooshEnabled
+      onClose
     } = this.props;
 
     const yPos = -0.22;
@@ -73,11 +72,10 @@ class Record extends Component {
           className="clickable"
           events={{
             click: () => {
-              SoundManager.swipe();
+              SoundManager.whoosh();
               onSelect(index);
             },
             mouseenter: () => {
-              if (whooshEnabled) SoundManager.whoosh();
               this.setState({ peek: true });
             },
             mouseleave: () => {
@@ -112,7 +110,7 @@ class Record extends Component {
             property: "position",
             to: `0 ${isSelected ? "0.7" : "0"} 0`,
             loop: false,
-            dur: 500,
+            dur: 100,
             delay: 0,
             dir: "alternate"
           }}
@@ -139,7 +137,7 @@ const renderRecord = (
   index
 ) => (
   <Record
-    {...trackData}
+    src={trackData.src}
     isPeekingEnabled={index !== viewingRecordIndex}
     isSelected={index === viewingRecordIndex}
     whooshEnabled={viewingRecordIndex === false}
@@ -159,19 +157,15 @@ export default ({
   onRecordSelect,
   onRecordClose,
   onRecordOpen
-}) => (
-  <Fragment>
-    {mapIndexed(
-      partial(renderRecord, [
-        {
-          viewingRecordIndex,
-          openRecordIndex,
-          onRecordSelect,
-          onRecordClose,
-          onRecordOpen
-        }
-      ]),
-      tracks
-    )}
-  </Fragment>
-);
+}) => {
+  const renderRecordPartial = partial(renderRecord, [
+    {
+      viewingRecordIndex,
+      openRecordIndex,
+      onRecordSelect,
+      onRecordClose,
+      onRecordOpen
+    }
+  ]);
+  return <>{mapIndexed(renderRecordPartial, tracks)}</>;
+};

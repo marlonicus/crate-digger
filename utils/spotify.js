@@ -1,6 +1,9 @@
 /* global fetch */
 import queryString from "query-string";
 
+let player;
+let accessToken = "";
+
 const loginParams = {
   client_id: process.env.SPOTIFY_CLIENT_ID,
   response_type: `token`,
@@ -19,35 +22,40 @@ const endpoints = {
   login: `https://accounts.spotify.com/authorize?${queryString.stringify(
     loginParams
   )}`,
-  topArtists: `https://api.spotify.com/v1/me/top/artists`
+  topArtists: `https://api.spotify.com/v1/me/top/artists`,
+  topTracks: ({ id }) =>
+    `https://api.spotify.com/v1/artists/${id}/top-tracks?country=SE`
 };
 
-const getHeaders = ({ accessToken }) => ({
+const getHeaders = () => ({
   headers: {
     Authorization: `Bearer ${accessToken}`
   }
 });
 
 export default {
+  setAccessToken: token => (accessToken = token),
+
   login: () => {
     window.location.href = endpoints.login;
   },
 
-  getTopArtists: async ({ accessToken }) => {
-    const response = await fetch(
-      endpoints.topArtists,
-      getHeaders({ accessToken })
-    );
+  getTopArtists: async () => {
+    const response = await fetch(endpoints.topArtists, getHeaders());
     return response.json();
   },
 
-  connect: ({ accessToken, callback }) => {
+  getTopTracks: async ({ id }) => {
+    const response = await fetch(endpoints.topTracks({ id }), getHeaders());
+    return response.json();
+  },
+
+  connect: ({ callback }) => {
     window.onSpotifyWebPlaybackSDKReady = () => {
-      const token = accessToken;
-      const player = new Spotify.Player({
+      player = new Spotify.Player({
         name: "Crate Digger",
         getOAuthToken: cb => {
-          cb(token);
+          cb(accessToken);
         }
       });
 
@@ -73,7 +81,7 @@ export default {
       // Ready
       player.addListener("ready", ({ device_id }) => {
         console.log("Ready with Device ID", device_id);
-        callback(player);
+        callback();
       });
 
       // Not Ready
@@ -86,21 +94,17 @@ export default {
     };
   },
 
-  play: ({
-    spotify_uri,
-    playerInstance: {
-      _options: { getOAuthToken, id }
-    }
-  }) => {
-    getOAuthToken(access_token => {
-      fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
-        method: "PUT",
-        body: JSON.stringify({ uris: [spotify_uri] }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`
-        }
-      });
+  play: ({ uri }) => {
+    const {
+      _options: { id }
+    } = player;
+    fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
+      method: "PUT",
+      body: JSON.stringify({ uris: [uri] }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`
+      }
     });
   }
 };

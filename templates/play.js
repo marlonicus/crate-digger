@@ -36,7 +36,6 @@ class PlayTemplate extends React.Component {
     });
 
     spotify.connect({
-      accessToken: this.props.accessToken,
       callback: player => {
         spotify.play({
           playerInstance: player,
@@ -45,9 +44,7 @@ class PlayTemplate extends React.Component {
       }
     });
 
-    const userData = await spotify.getTopArtists({
-      accessToken: this.props.accessToken
-    });
+    const userData = await spotify.getTopArtists();
 
     this.setState({
       userData
@@ -68,11 +65,17 @@ class PlayTemplate extends React.Component {
     this.setState({ viewingRecordIndex: false });
   }
 
-  openRecord(index) {
+  openRecord = async index => {
+    const { tracks } = await spotify.getTopTracks({
+      id: this.state.userData.items[index].id
+    });
+
+    spotify.play({ uri: tracks[0].uri });
+
     this.setState({
       openRecordIndex: index
     });
-  }
+  };
 
   render() {
     return (
