@@ -8,14 +8,7 @@ const loginParams = {
   client_id: process.env.SPOTIFY_CLIENT_ID,
   response_type: `token`,
   redirect_uri: process.env.SPOTIFY_LOGIN_REDIRECT_URL,
-  scope: [
-    "streaming",
-    "user-read-birthdate",
-    "user-read-email",
-    "user-modify-playback-state",
-    "user-read-private",
-    `user-top-read`
-  ]
+  scope: ["streaming", "user-modify-playback-state", "user-top-read"]
 };
 
 const endpoints = {

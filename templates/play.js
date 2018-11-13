@@ -36,12 +36,7 @@ class PlayTemplate extends React.Component {
     });
 
     spotify.connect({
-      callback: player => {
-        spotify.play({
-          playerInstance: player,
-          spotify_uri: "spotify:artist:2d0hyoQ5ynDBnkvAbJKORj"
-        });
-      }
+      callback: player => {}
     });
 
     const userData = await spotify.getTopArtists();

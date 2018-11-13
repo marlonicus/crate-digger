@@ -1,6 +1,6 @@
 # Crate Digger
 
-Virtual reality crate digging experience.
+Virtual reality crate digging experience, have a go [here](https://crate-digger.netlify.com):
 
 ## Getting Started
 
@@ -8,8 +8,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-• Node.js > 8.10
-• Yarn
+- Node.js > 8.10
+- Yarn
 
 ### Installing
 
@@ -25,7 +25,7 @@ And then you can run the following command to start the local development server
 $ yarn dev
 ```
 
-To check that everything works, visit `http://127.0.0.1:3000/` in your favourite browser.
+To check that everything works, visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your favourite browser.
 
 ## Deployment
 

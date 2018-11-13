@@ -1,5 +1,4 @@
-export default () => (
-	<style jsx-gobal>{`
+export default `
     html, body, main, #__next, a-scene {
       width: 100vw;
       height: 100vh;
@@ -73,5 +72,4 @@ export default () => (
 		@media (max-width: 400px) {
 		  html { font-size: 13px; }
 		}
-`}</style>
-)
+`;
