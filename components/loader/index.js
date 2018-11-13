@@ -13,7 +13,7 @@ const Loader = () => (
         }
       `}
     </style>
-    Hold on a second...
+    Gimme a second...
   </p>
 );
 

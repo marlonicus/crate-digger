@@ -5,8 +5,26 @@ import { partial } from "ramda";
 import spotify from "../../utils/spotify";
 import SoundManager from "../../utils/sound";
 
-const keydown = () => SoundManager.footsteps();
-const keyup = () => SoundManager.footsteps({ stop: true });
+const movementKeys = [65, 87, 68, 83, 37, 38, 39, 40];
+const keysPressed = [];
+
+const keydown = event => {
+  // Check key is valid movement key, and that we haven't logged it already.
+  if (
+    movementKeys.indexOf(event.keyCode) > -1 &&
+    keysPressed.indexOf(event.keyCode) === -1
+  ) {
+    keysPressed.push(event.keyCode);
+    SoundManager.footsteps();
+  }
+};
+
+const keyup = event => {
+  keysPressed.splice(keysPressed.indexOf(event.keyCode), 1);
+  if (keysPressed.length <= 0) {
+    SoundManager.footsteps({ stop: true });
+  }
+};
 
 const withWalkingSounds = lifecycle({
   componentDidMount() {
