@@ -87,9 +87,11 @@ class Record extends Component {
         <RecordSleeveEntity
           material={{ src, side: "double" }}
           className={`${isSelected && "clickable"}`}
-          events={{
-            click: () => isSelected && onOpen(index)
-          }}
+          events={
+            {
+              // click: () => isSelected && onOpen(index)
+            }
+          }
           animation__peek-rotate-sideways={{
             property: "rotation",
             to: `0 0 ${isPeekingEnabled && this.state.peek ? "5" : "0"}`,

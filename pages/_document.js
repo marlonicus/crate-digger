@@ -16,7 +16,7 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=ABeeZee"
             rel="stylesheet"
           />
-          <style>{`* { font-family: 'ABeeZee', sans-serif; }`}</style>
+          <style jsx-global>{`* { font-family: ABeeZee, sans-serif; }`}</style>
           <script src="https://sdk.scdn.co/spotify-player.js" />
         </Head>
         <body>

@@ -12,13 +12,8 @@ export default () => (
     height: 100vh;
     margin: 0;
     padding: 0;
-    background: #333;
-    font-family: Arial;
-    color: white;
-  }
-
-  button {
-    font-family: Arial;
+    background: white;
+    color: #333;
   }
 
   /* http://meyerweb.com/eric/tools/css/reset/

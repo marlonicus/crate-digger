@@ -99,5 +99,9 @@ export default {
         Authorization: `Bearer ${accessToken}`
       }
     });
+  },
+
+  pause: () => {
+    player.pause();
   }
 };

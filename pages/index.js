@@ -1,5 +1,6 @@
 import LoginTemplate from "../templates/login";
 import PlayTemplate from "../templates/play";
+import Loader from "../components/loader";
 import spotify from "../utils/spotify";
 import { checkUserIsLoggedIn, checkTestMode } from "../utils/misc";
 
@@ -27,7 +28,7 @@ export default class Page extends React.Component {
     return (
       <main>
         {!this.state.mounted ? (
-          <p>Loading</p>
+          <Loader />
         ) : this.state.isLoggedIn ? (
           <PlayTemplate accessToken={this.state.isLoggedIn} />
         ) : (

@@ -40,23 +40,24 @@ class PlayTemplate extends React.Component {
     return pathOr(0, ["state", "userData", "items", "length"], this);
   }
 
-  viewRecord(index) {
-    this.setState({
-      viewingRecordIndex: index
-    });
-  }
-
-  closeRecord() {
-    this.setState({ viewingRecordIndex: false });
-  }
-
-  openRecord = async index => {
+  viewRecord = async index => {
     const { tracks } = await spotify.getTopTracks({
       id: this.state.userData.items[index].id
     });
 
     spotify.play({ uri: tracks[0].uri });
 
+    this.setState({
+      viewingRecordIndex: index
+    });
+  };
+
+  closeRecord() {
+    spotify.pause();
+    this.setState({ viewingRecordIndex: false });
+  }
+
+  openRecord = async index => {
     this.setState({
       openRecordIndex: index
     });

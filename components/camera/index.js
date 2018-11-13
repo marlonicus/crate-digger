@@ -22,7 +22,7 @@ const Camera = () => (
   <Entity
     primitive="a-camera"
     look-controls
-    position={`0.118 2.900 ${process.env.DEV && false ? 0.623 : 45.623}`}
+    position="0 0 5"
     rotation="0 0 0"
     wasd-controls
   />

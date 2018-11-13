@@ -9,7 +9,6 @@ const LoginTemplate = () => (
           justify-content: space-around;
           align-items: center;
           flex-direction: column;
-          background: white;
         }
 
         button {
