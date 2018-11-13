@@ -16,6 +16,7 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=ABeeZee"
             rel="stylesheet"
           />
+          <title>Crate Digger - Marlonic.us</title>
           <style jsx-global>{`* { font-family: ABeeZee, sans-serif; }`}</style>
           <script src="https://sdk.scdn.co/spotify-player.js" />
         </Head>
