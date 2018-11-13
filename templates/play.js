@@ -70,7 +70,7 @@ class PlayTemplate extends React.Component {
         cursor="rayOrigin: mouse; fuse: false"
         raycaster="objects: .clickable"
       >
-        <Room showTurtle={true} />
+        <Room />
 
         <Crate>
           {this.state.userData && (

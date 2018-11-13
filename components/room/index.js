@@ -2,18 +2,18 @@ import { Entity } from "aframe-react";
 
 const Monitor = () => (
   <Entity
-    obj-model="obj:/static/models/speaker.obj;mtl:/static/materials/speaker.mtl"
-    scale="0.0002 0.0002 0.0002"
-    position="32.475 0 6.967"
+    obj-model="obj:/static/models/stereo.obj;mtl:/static/materials/stereo.mtl"
+    scale="0.2 0.2 0.2"
+    position="0 0 0"
     rotation="0 0 0"
   />
 );
 const Monitors = () => (
   <>
-    <Entity position="-2.5 -2.8 -2.5" rotation="0 -105 0">
+    <Entity position="-2 -2.8 -0.5" rotation="0 -0 0">
       <Monitor />
     </Entity>
-    <Entity position="2.5 -2.8 -2.5" rotation="0 -104 0">
+    <Entity position="2 -2.8 -0.5" rotation="0 -0 0">
       <Monitor />
     </Entity>
   </>
@@ -26,7 +26,7 @@ const MovementSign = () => (
       width: 1,
       height: 1
     }}
-    position="0 1.6 -3"
+    position="0 1.6 -1.3"
     rotation="0 0 0"
     material={{
       src: "http://127.0.0.1:3000/static/images/movement.gif"
@@ -41,7 +41,7 @@ const SightSign = () => (
       width: 1,
       height: 1
     }}
-    position="0 0.6 -3"
+    position="0 0.6 -1.3"
     rotation="-3 0 0"
     material={{
       src: "http://127.0.0.1:3000/static/images/sight.gif"
