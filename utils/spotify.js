@@ -17,7 +17,9 @@ const endpoints = {
   )}`,
   topArtists: `https://api.spotify.com/v1/me/top/artists`,
   topTracks: ({ id }) =>
-    `https://api.spotify.com/v1/artists/${id}/top-tracks?country=SE`
+    `https://api.spotify.com/v1/artists/${id}/top-tracks?country=SE`,
+
+  trackAnalysis: ({ id }) => `https://api.spotify.com/v1/audio-features/${id}`
 };
 
 const getHeaders = () => ({
@@ -25,6 +27,11 @@ const getHeaders = () => ({
     Authorization: `Bearer ${accessToken}`
   }
 });
+
+const getTrackAnalysis = async ({ id }) => {
+  const response = await fetch(endpoints.trackAnalysis({ id }), getHeaders());
+  return response.json();
+};
 
 export default {
   setAccessToken: token => (accessToken = token),
@@ -42,6 +49,8 @@ export default {
     const response = await fetch(endpoints.topTracks({ id }), getHeaders());
     return response.json();
   },
+
+  getTrackAnalysis,
 
   connect: ({ callback }) => {
     window.onSpotifyWebPlaybackSDKReady = () => {
@@ -87,11 +96,14 @@ export default {
     };
   },
 
-  play: ({ uri }) => {
+  play: async ({ uri, id: trackId }) => {
+    const { tempo } = await getTrackAnalysis({ id: trackId });
+
     const {
       _options: { id }
     } = player;
-    fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
+
+    await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
       method: "PUT",
       body: JSON.stringify({ uris: [uri] }),
       headers: {
@@ -99,6 +111,8 @@ export default {
         Authorization: `Bearer ${accessToken}`
       }
     });
+
+    return tempo;
   },
 
   pause: () => {

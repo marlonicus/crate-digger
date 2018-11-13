@@ -45,10 +45,11 @@ class PlayTemplate extends React.Component {
       id: this.state.userData.items[index].id
     });
 
-    spotify.play({ uri: tracks[0].uri });
+    const tempo = await spotify.play(tracks[0]);
 
     this.setState({
-      viewingRecordIndex: index
+      viewingRecordIndex: index,
+      tempo
     });
   };
 
@@ -70,7 +71,10 @@ class PlayTemplate extends React.Component {
         cursor="rayOrigin: mouse; fuse: false"
         raycaster="objects: .clickable"
       >
-        <Room />
+        <Room
+          isMusicPlaying={this.state.viewingRecordIndex !== false}
+          bpm={this.state.tempo}
+        />
 
         <Crate>
           {this.state.userData && (

@@ -1,6 +1,7 @@
 import { Component, Fragment } from "react";
 import { Entity } from "aframe-react";
 import { partial } from "ramda";
+import CloseButton from "../close-button";
 import { mapIndexed } from "../../utils/misc";
 import SoundManager from "../../utils/sound";
 
@@ -19,22 +20,6 @@ const RecordSleeveEntity = props => (
     rotation="0 0 0"
     {...props}
   />
-);
-
-const CloseButton = props => (
-  <Entity
-    position="0.28 0.28 0.01"
-    geometry={{
-      primitive: "plane",
-      width: "0.05",
-      height: "0.05w",
-      color: "#ffff00"
-    }}
-    material={{ color: "black", roughness: 0.5 }}
-    {...props}
-  >
-    <Entity text={{ value: "x" }} position="0.482 0.005 0" />
-  </Entity>
 );
 
 class Record extends Component {
