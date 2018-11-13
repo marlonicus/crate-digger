@@ -20,7 +20,8 @@
     "query-string": "^6.1.0",
     "ramda": "^0.25.0",
     "react": "^16.4.0",
-    "react-dom": "^16.4.0"
+    "react-dom": "^16.4.0",
+    "recompose": "^0.30.0"
   },
   "devDependencies": {
     "eslint": "^5.3.0",

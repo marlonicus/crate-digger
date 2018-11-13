@@ -5,9 +5,7 @@ import Room from "../components/room";
 import Crate from "../components/crate";
 import Records from "../components/records";
 import Camera from "../components/camera";
-import Turntable from "../components/turntable";
 import { checkTestMode } from "../utils/misc";
-import SoundManager from "../utils/sound";
 import { userData as mockUserData } from "../data/mock";
 
 const getRecordFromTrackItem = ({ id, images, name }) => ({
@@ -27,14 +25,6 @@ class PlayTemplate extends React.Component {
   }
 
   componentDidMount = async () => {
-    document.addEventListener("keydown", () => {
-      SoundManager.footsteps();
-    });
-
-    document.addEventListener("keyup", () => {
-      SoundManager.footsteps({ stop: true });
-    });
-
     spotify.connect({
       callback: player => {}
     });
@@ -94,7 +84,6 @@ class PlayTemplate extends React.Component {
           )}
         </Crate>
 
-        <Turntable />
         <Camera />
       </Scene>
     );

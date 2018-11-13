@@ -1,23 +1,36 @@
 import { Component } from "react";
 import { Entity } from "aframe-react";
+import { lifecycle, compose, pure } from "recompose";
+import SoundManager from "../../utils/sound";
 
-class Camera extends Component {
-  shouldComponentUpdate(nextProps, nextState) {
-    return false;
+const keydown = () => SoundManager.footsteps();
+const keyup = () => SoundManager.footsteps({ stop: true });
+
+const withWalkingSounds = lifecycle({
+  componentDidMount() {
+    document.addEventListener("keydown", keydown);
+    document.addEventListener("keyup", keyup);
+
+    return function cleanup() {
+      document.removeEventListener("keydown", keydown);
+      document.removeEventListener("keyup", keyup);
+    };
   }
+});
 
-  render() {
-    return (
-      <Entity
-        primitive="a-camera"
-        look-controls
-        // position="0.118 1.600 45.623"
-        position="0.118 1.600 0.623"
-        rotation="-6.532 0.344 0"
-        wasd-controls
-      />
-    );
-  }
-}
+const Camera = () => (
+  <Entity
+    primitive="a-camera"
+    look-controls
+    position={`0.118 2.900 ${process.env.DEV && false ? 0.623 : 45.623}`}
+    rotation="0 0 0"
+    wasd-controls
+  />
+);
 
-export default Camera;
+const enhance = compose(
+  withWalkingSounds,
+  pure
+);
+
+export default enhance(Camera);

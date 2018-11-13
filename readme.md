@@ -1,6 +1,6 @@
 # Crate Digger
 
-Virtual reality crate digging experience, have a go [here](https://crate-digger.netlify.com):
+Virtual reality crate digging experience, have a go [here](https://crate-digger.netlify.com) :)
 
 ## Getting Started
 
@@ -41,6 +41,7 @@ Each push is automatically deployed to Netlify upon successful build.
 - [eslint](https://eslint.org/) - Keeps my code consistent.
 - [prettier](https://prettier.io/) - Keeps my code pretty.
 - [Netlify](https://www.netlify.com/) - Wonderful pipelines and hosting.
+- [Google Poly](https://poly.google.com/) - Great collection of free low poly 3D models.
 
 ## Contributing
 

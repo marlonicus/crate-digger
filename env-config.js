@@ -7,7 +7,7 @@
 require("dotenv").config();
 const { reduce } = require("ramda");
 
-const envVars = ["SPOTIFY_LOGIN_REDIRECT_URL", "SPOTIFY_CLIENT_ID"];
+const envVars = ["SPOTIFY_LOGIN_REDIRECT_URL", "SPOTIFY_CLIENT_ID", "DEV"];
 
 module.exports = reduce(
   (prev, curr) => ({
