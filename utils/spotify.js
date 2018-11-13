@@ -3,6 +3,7 @@ import queryString from "query-string";
 
 let player;
 let accessToken = "";
+const volume = 0;
 
 const loginParams = {
   client_id: process.env.SPOTIFY_CLIENT_ID,
@@ -117,5 +118,9 @@ export default {
 
   pause: () => {
     player.pause();
+  },
+
+  setVolume: value => {
+    if (player && value !== volume) player.setVolume(value / 100);
   }
 };

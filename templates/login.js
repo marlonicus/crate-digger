@@ -26,7 +26,7 @@ const LoginTemplate = () => (
       `}
     </style>
 
-    <button onClick={spotify.login}>go</button>
+    <button onClick={spotify.login}>dig.</button>
   </main>
 );
 

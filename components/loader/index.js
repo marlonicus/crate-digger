@@ -7,12 +7,13 @@ const Loader = () => (
         p {
           position: absolute;
           top: 50%;
+          opacity: 0.5;
           left: 50%;
           transform: translate(-50%, -50%);
         }
       `}
     </style>
-    Loading
+    Hold on a second...
   </p>
 );
 
