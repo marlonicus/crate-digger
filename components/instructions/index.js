@@ -13,7 +13,7 @@ const Instructions = () => (
       position="0 1.6 -1.3"
       rotation="0 0 0"
       material={{
-        src: "http://127.0.0.1:3000/static/images/movement.gif"
+        src: "/static/images/movement.gif"
       }}
     />
 
@@ -27,7 +27,7 @@ const Instructions = () => (
       position="0 0.6 -1.3"
       rotation="-3 0 0"
       material={{
-        src: "http://127.0.0.1:3000/static/images/sight.gif"
+        src: "/static/images/sight.gif"
       }}
     />
   </>
