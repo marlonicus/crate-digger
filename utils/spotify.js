@@ -8,14 +8,13 @@ const volume = 0;
 const loginParams = {
   client_id: process.env.SPOTIFY_CLIENT_ID,
   response_type: `token`,
-  redirect_uri: process.env.SPOTIFY_LOGIN_REDIRECT_URL,
-  scope: ["streaming", "user-modify-playback-state", "user-top-read"]
+  redirect_uri: process.env.SPOTIFY_LOGIN_REDIRECT_URL
 };
 
 const endpoints = {
   login: `https://accounts.spotify.com/authorize?${queryString.stringify(
     loginParams
-  )}`,
+  )}&scope=streaming%20user-modify-playback-state%20user-top-read`,
   topArtists: `https://api.spotify.com/v1/me/top/artists`,
   topTracks: ({ id }) =>
     `https://api.spotify.com/v1/artists/${id}/top-tracks?country=SE`,
