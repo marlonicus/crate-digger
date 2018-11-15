@@ -1,7 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React, { Component } from "react";
 import { Entity } from "aframe-react";
-import { partial } from "ramda";
 import CloseButton from "../close-button";
 import { mapIndexed } from "../../utils/misc";
 import SoundManager from "../../utils/sound";
@@ -85,6 +84,7 @@ class Record extends Component {
             },
             mouseenter: () => {
               onPeek(index);
+              SoundManager.whip();
             }
           }}
         />
@@ -113,41 +113,12 @@ class Record extends Component {
   }
 }
 
-const renderRecord = (
-  {
-    viewingRecordIndex,
-    openRecordIndex,
-    onRecordSelect,
-    onRecordClose,
-    onRecordOpen,
-    onPeek,
-    peekIndex
-  },
-  trackData,
-  index
-) => (
-  <Record
-    src={trackData.src}
-    isPeekingEnabled={index !== viewingRecordIndex}
-    isSelected={index === viewingRecordIndex}
-    whooshEnabled={viewingRecordIndex === false}
-    isOpen={openRecordIndex === index}
-    onSelect={onRecordSelect}
-    onOpen={onRecordOpen}
-    onClose={onRecordClose}
-    onPeek={onPeek}
-    key={index}
-    index={index}
-    peekIndex={peekIndex}
-  />
-);
-
 export default class Records extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      peekIndex: 0
+      peekIndex: 20
     };
   }
 
@@ -160,41 +131,34 @@ export default class Records extends React.Component {
       onRecordClose,
       onRecordOpen
     } = this.props;
+    const { peekIndex } = this.state;
 
-    const renderRecordPartial = partial(renderRecord, [
-      {
-        viewingRecordIndex,
-        openRecordIndex,
-        onRecordSelect,
-        onRecordClose,
-        onRecordOpen,
-        peekIndex: this.state.peekIndex,
-        onPeek: peekIndex =>
-          this.setState({
-            peekIndex
-          })
-      }
-    ]);
-    return <>{mapIndexed(renderRecordPartial, tracks)}</>;
+    return (
+      <>
+        {mapIndexed(
+          (trackData, index) => (
+            <Record
+              src={trackData.src}
+              isPeekingEnabled={index !== viewingRecordIndex}
+              isSelected={index === viewingRecordIndex}
+              whooshEnabled={viewingRecordIndex === false}
+              isOpen={openRecordIndex === index}
+              onSelect={onRecordSelect}
+              onOpen={onRecordOpen}
+              onClose={onRecordClose}
+              key={index}
+              index={index}
+              peekIndex={peekIndex}
+              onPeek={newPeekIndex =>
+                this.setState({
+                  peekIndex: newPeekIndex
+                })
+              }
+            />
+          ),
+          tracks
+        )}
+      </>
+    );
   }
 }
-
-// export default ({
-//   tracks,
-//   viewingRecordIndex,
-//   openRecordIndex,
-//   onRecordSelect,
-//   onRecordClose,
-//   onRecordOpen
-// }) => {
-//   const renderRecordPartial = partial(renderRecord, [
-//     {
-//       viewingRecordIndex,
-//       openRecordIndex,
-//       onRecordSelect,
-//       onRecordClose,
-//       onRecordOpen
-//     }
-//   ]);
-//   return <>{mapIndexed(renderRecordPartial, tracks)}</>;
-// };
