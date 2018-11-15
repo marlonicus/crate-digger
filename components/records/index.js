@@ -1,4 +1,5 @@
-import { Component, Fragment } from "react";
+/* eslint-disable react/no-multi-comp */
+import React, { Component } from "react";
 import { Entity } from "aframe-react";
 import { partial } from "ramda";
 import CloseButton from "../close-button";
@@ -27,7 +28,7 @@ class Record extends Component {
     super();
 
     this.state = {
-      peek: false
+      // peek: false
     };
   }
 
@@ -39,7 +40,9 @@ class Record extends Component {
       index,
       onSelect,
       onOpen,
-      onClose
+      onClose,
+      onPeek,
+      peekIndex
     } = this.props;
 
     const yPos = -0.22;
@@ -49,7 +52,27 @@ class Record extends Component {
       <Entity
         position={`${xPos} ${yPos} 0`}
         scale={{ x: 1, y: 1, z: 1 }}
-        rotation="15 265.65 180"
+        rotation="15 269 180"
+        animation__peek-rotate-sideways={{
+          property: "rotation",
+          to: `${
+            isPeekingEnabled && peekIndex < index ? "-5.260" : "15"
+          } 269 180`,
+          loop: false,
+          dur: 100,
+          delay: 0,
+          dir: "alternate"
+        }}
+        animation__peek-bring-forward={{
+          property: "position",
+          to: `${
+            isPeekingEnabled && peekIndex < index ? xPos - 0.1 : xPos
+          } ${yPos} 0`,
+          loop: false,
+          dur: 100,
+          delay: 0,
+          dir: "alternate"
+        }}
       >
         {/* Hit area for peeking */}
         <RecordSleeveEntity
@@ -61,10 +84,7 @@ class Record extends Component {
               onSelect(index);
             },
             mouseenter: () => {
-              this.setState({ peek: true });
-            },
-            mouseleave: () => {
-              this.setState({ peek: false });
+              onPeek(index);
             }
           }}
         />
@@ -72,26 +92,8 @@ class Record extends Component {
         <RecordSleeveEntity
           material={{ src, side: "double" }}
           className={`${isSelected && "clickable"}`}
-          events={
-            {
-              // click: () => isSelected && onOpen(index)
-            }
-          }
-          animation__peek-rotate-sideways={{
-            property: "rotation",
-            to: `0 0 ${isPeekingEnabled && this.state.peek ? "5" : "0"}`,
-            loop: false,
-            dur: 100,
-            delay: 0,
-            dir: "alternate"
-          }}
-          animation__peek-slide-up={{
-            property: "position",
-            to: `0 ${isPeekingEnabled && this.state.peek ? "0.05" : "0"} 0`,
-            loop: false,
-            dur: 100,
-            delay: 0,
-            dir: "alternate"
+          events={{
+            click: () => isSelected && onOpen(index)
           }}
           animation__active-slide-up={{
             property: "position",
@@ -106,7 +108,6 @@ class Record extends Component {
             <CloseButton className="clickable" events={{ click: onClose }} />
           )}
         </RecordSleeveEntity>
-        )}
       </Entity>
     );
   }
@@ -118,7 +119,9 @@ const renderRecord = (
     openRecordIndex,
     onRecordSelect,
     onRecordClose,
-    onRecordOpen
+    onRecordOpen,
+    onPeek,
+    peekIndex
   },
   trackData,
   index
@@ -132,27 +135,66 @@ const renderRecord = (
     onSelect={onRecordSelect}
     onOpen={onRecordOpen}
     onClose={onRecordClose}
+    onPeek={onPeek}
     key={index}
     index={index}
+    peekIndex={peekIndex}
   />
 );
 
-export default ({
-  tracks,
-  viewingRecordIndex,
-  openRecordIndex,
-  onRecordSelect,
-  onRecordClose,
-  onRecordOpen
-}) => {
-  const renderRecordPartial = partial(renderRecord, [
-    {
+export default class Records extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      peekIndex: 0
+    };
+  }
+
+  render() {
+    const {
+      tracks,
       viewingRecordIndex,
       openRecordIndex,
       onRecordSelect,
       onRecordClose,
       onRecordOpen
-    }
-  ]);
-  return <>{mapIndexed(renderRecordPartial, tracks)}</>;
-};
+    } = this.props;
+
+    const renderRecordPartial = partial(renderRecord, [
+      {
+        viewingRecordIndex,
+        openRecordIndex,
+        onRecordSelect,
+        onRecordClose,
+        onRecordOpen,
+        peekIndex: this.state.peekIndex,
+        onPeek: peekIndex =>
+          this.setState({
+            peekIndex
+          })
+      }
+    ]);
+    return <>{mapIndexed(renderRecordPartial, tracks)}</>;
+  }
+}
+
+// export default ({
+//   tracks,
+//   viewingRecordIndex,
+//   openRecordIndex,
+//   onRecordSelect,
+//   onRecordClose,
+//   onRecordOpen
+// }) => {
+//   const renderRecordPartial = partial(renderRecord, [
+//     {
+//       viewingRecordIndex,
+//       openRecordIndex,
+//       onRecordSelect,
+//       onRecordClose,
+//       onRecordOpen
+//     }
+//   ]);
+//   return <>{mapIndexed(renderRecordPartial, tracks)}</>;
+// };
