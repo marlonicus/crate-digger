@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React from "react";
 import { Entity } from "aframe-react";
 import { lifecycle, compose, pure } from "recompose";
 import { partial } from "ramda";
@@ -30,11 +30,11 @@ const withWalkingSounds = lifecycle({
   componentDidMount() {
     document.addEventListener("keydown", keydown);
     document.addEventListener("keyup", keyup);
+  },
 
-    return function cleanup() {
-      document.removeEventListener("keydown", keydown);
-      document.removeEventListener("keyup", keyup);
-    };
+  componentWillUnmount() {
+    document.removeEventListener("keydown", keydown);
+    document.removeEventListener("keyup", keyup);
   }
 });
 
@@ -46,9 +46,11 @@ const dist = (v1, v2) => {
   return Math.sqrt(dx * dx + dy * dy + dz * dz);
 };
 
+const minMax = (min, max, val) => Math.max(min, Math.min(max, Math.abs(val)));
+
 const tick = entity => {
   const distance = dist(entity.getAttribute("position"), { x: 0, y: 0, z: 0 });
-  const newVolume = Math.max(0, Math.min(100, Math.abs(distance * 8)));
+  const newVolume = minMax(0, 80, distance * 8);
   spotify.setVolume(100 - newVolume);
   requestAnimationFrame(partial(tick, [entity]));
 };
@@ -57,20 +59,29 @@ const setCameraRef = entity => {
   requestAnimationFrame(partial(tick, [entity]));
 };
 
-class Camera extends React.Component {
-  render() {
-    return (
-      <Entity
-        _ref={setCameraRef}
-        primitive="a-camera"
-        look-controls
-        position="0 0 5"
-        rotation="0 0 0"
-        wasd-controls
+const Camera = () => (
+  <Entity
+    _ref={setCameraRef}
+    primitive="a-camera"
+    look-controls={{
+      pointerLockEnabled: true
+    }}
+    position="0 0 5"
+    rotation="0 0 0"
+    wasd-controls
+  >
+    <a-cursor color="red">
+      <a-animation
+        begin="cursor-hovering"
+        easing="ease-bounce"
+        attribute="scale"
+        dur="100"
+        from="0.6 0.6 0.6"
+        to="0.4 0.4 0.4"
       />
-    );
-  }
-}
+    </a-cursor>
+  </Entity>
+);
 
 const enhance = compose(
   withWalkingSounds,

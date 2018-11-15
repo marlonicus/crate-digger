@@ -16,8 +16,8 @@ const getRecordFromTrackItem = ({ id, images, name }) => ({
 });
 
 class PlayTemplate extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       viewingRecordIndex: false,
@@ -98,11 +98,7 @@ class PlayTemplate extends React.Component {
             </div>
           </>
         )}
-        <Scene
-          vr-mode-ui={{ enabled: true }}
-          cursor="rayOrigin: mouse; fuse: false"
-          raycaster="objects: .clickable"
-        >
+        <Scene vr-mode-ui={{ enabled: true }}>
           <Room
             isMusicPlaying={this.state.viewingRecordIndex !== false}
             bpm={this.state.tempo}
