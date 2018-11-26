@@ -1,9 +1,11 @@
 /* global fetch */
 import queryString from "query-string";
-import { join, omit, always } from "ramda";
+import { join, omit, map, prop } from "ramda";
 import createPlayer from "./player";
+import { takeRandX, mapIndexed } from "../misc";
 
 let player;
+let market = "";
 let accessToken = "";
 
 const login = () => {
@@ -11,7 +13,14 @@ const login = () => {
     client_id: process.env.SPOTIFY_CLIENT_ID,
     response_type: `token`,
     redirect_uri: process.env.SPOTIFY_LOGIN_REDIRECT_URL,
-    scope: ["streaming", "user-modify-playback-state", "user-top-read"]
+    scope: [
+      "streaming",
+      "user-modify-playback-state",
+      "user-top-read",
+      "user-read-private",
+      "user-read-birthdate",
+      "user-read-email"
+    ]
   };
 
   const query = queryString.stringify(omit(["scope"], loginParams));
@@ -30,36 +39,84 @@ const fetchWebApi = async url => {
   return response.json();
 };
 
-const getTracksAnalysis = async ({ ids }) =>
+const getTracksAnalyses = async ({ ids }) =>
   fetchWebApi(
     `https://api.spotify.com/v1/audio-features/?ids=${join(",", ids)}`
   );
 
-const getTopArtists = async () =>
-  fetchWebApi("https://api.spotify.com/v1/me/top/artists");
+const getRecommendationsFromGenre = async ({ genre }) =>
+  fetchWebApi(
+    `https://api.spotify.com/v1/recommendations?market=${market}&seed_genres=${genre}&limit=10`
+  );
 
-const getRecommendations = async () =>
-  fetchWebApi(`https://api.spotify.com/v1/recommendations`);
+const getMe = async () => fetchWebApi(`https://api.spotify.com/v1/me`);
 
-const getTopTracks = async ({ id }) =>
-  fetchWebApi(`https://api.spotify.com/v1/artists/${id}/top-tracks?country=SE`);
+const getGenreSeeds = async () =>
+  fetchWebApi(
+    `https://api.spotify.com/v1/recommendations/available-genre-seeds`
+  );
+
+const getRandomGenres = async () => {
+  const { genres } = await getGenreSeeds();
+  return takeRandX(5)(genres);
+};
+
+const addTrackAnalysesToCrates = async ({ crates }) => {
+  const tracksWithTempos = await Promise.all(
+    map(async crate => {
+      const { tracks } = crate.content;
+      const ids = map(prop("id"), tracks);
+      const { audio_features: analyses } = await getTracksAnalyses({ ids });
+      const content = {
+        ...crate.content,
+        tracks: mapIndexed(
+          (track, index) => ({
+            ...track,
+            tempo: analyses[index].tempo
+          }),
+          tracks
+        )
+      };
+      return {
+        ...crate,
+        content
+      };
+    }, crates)
+  );
+
+  return tracksWithTempos;
+};
+
+const createBasicGenreCrates = async ({ genres }) => {
+  const crates = await Promise.all(
+    map(
+      async ([genre]) => ({
+        genre,
+        content: await getRecommendationsFromGenre({ genre })
+      }),
+      genres
+    )
+  );
+
+  return crates;
+};
 
 export default {
   login,
+
   setAccessToken: token => {
     accessToken = token;
   },
-  getTopArtists,
-  getTopTracks,
 
   connect: () =>
     new Promise((resolve, reject) => {
       window.onSpotifyWebPlaybackSDKReady = () => {
+        console.log("Creating new player with", accessToken);
         player = createPlayer({
           accessToken,
           onReady: resolve,
           onError: message => {
-            // @TODO: Nice error handling here
+            // @TODO: Handle this gracefully
             console.error(message);
             reject(message);
           }
@@ -80,8 +137,6 @@ export default {
         Authorization: `Bearer ${accessToken}`
       }
     });
-
-    return tempo;
   },
 
   pause: () => {
@@ -92,8 +147,14 @@ export default {
     if (player && value !== 0) player.setVolume(value / 100);
   },
 
-  getCrate: async () => {
-    const topArtists = await getTopArtists();
-    console.log(topArtists);
+  getCrates: async () => {
+    const { country } = await getMe();
+    market = country;
+
+    const genres = await getRandomGenres();
+    const crates = await createBasicGenreCrates({ genres });
+    const cratesWithAnalyses = await addTrackAnalysesToCrates({ crates });
+
+    return cratesWithAnalyses;
   }
 };

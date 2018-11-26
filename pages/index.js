@@ -1,8 +1,9 @@
+import React from "react";
 import LoginTemplate from "../templates/login";
 import PlayTemplate from "../templates/play";
 import Loader from "../components/loader";
 import spotify from "../utils/spotify";
-import { checkUserIsLoggedIn, checkTestMode } from "../utils/misc";
+import { checkUserIsLoggedIn } from "../utils/misc";
 
 export default class Page extends React.Component {
   constructor() {
@@ -20,16 +21,18 @@ export default class Page extends React.Component {
 
     this.setState({
       mounted: true,
-      isLoggedIn: accessToken || checkTestMode(window)
+      isLoggedIn: accessToken
     });
   }
 
   render() {
+    const { mounted, isLoggedIn } = this.state;
+
     return (
       <main>
-        {!this.state.mounted ? (
+        {!mounted ? (
           <Loader />
-        ) : this.state.isLoggedIn ? (
+        ) : isLoggedIn ? (
           <PlayTemplate />
         ) : (
           <LoginTemplate />

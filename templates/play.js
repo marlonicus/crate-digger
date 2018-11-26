@@ -21,14 +21,11 @@ class PlayTemplate extends React.Component {
   }
 
   componentDidMount = async () => {
-    // await spotify.connect();
-    const crate = await spotify.getCrate();
-    console.log(crate);
-  };
-
-  onSpotifyConnected() {
+    await spotify.connect();
+    const crates = await spotify.getCrates();
     this.setState({
-      readyState: 1
+      readyState: 1,
+      crates
     });
 
     // Nasty, but just a little buffer for the scene to render and add a nice fadeout
@@ -37,7 +34,7 @@ class PlayTemplate extends React.Component {
         readyState: 2
       });
     }, 700);
-  }
+  };
 
   getNumberOfRecords() {
     return pathOr(0, ["state", "userData", "items", "length"], this);

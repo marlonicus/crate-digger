@@ -2,6 +2,7 @@ export default ({ accessToken, onReady, onError }) => {
   const player = new Spotify.Player({
     name: "Crate Digger",
     getOAuthToken: cb => {
+      console.log("CALLING BACK", accessToken);
       cb(accessToken);
     }
   });
