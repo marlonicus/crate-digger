@@ -9,12 +9,6 @@ import Camera from "../components/camera";
 import { checkTestMode } from "../utils/misc";
 import { userData as mockUserData } from "../data/mock";
 
-const getRecordFromTrackItem = ({ id, images, name }) => ({
-  id,
-  name,
-  src: images[1].url
-});
-
 class PlayTemplate extends React.Component {
   constructor(props) {
     super(props);
@@ -27,14 +21,13 @@ class PlayTemplate extends React.Component {
   }
 
   componentDidMount = async () => {
-    spotify.connect({
-      callback: player => {}
-    });
+    // await spotify.connect();
+    const crate = await spotify.getCrate();
+    console.log(crate);
+  };
 
-    const userData = await spotify.getTopArtists();
-
+  onSpotifyConnected() {
     this.setState({
-      userData,
       readyState: 1
     });
 
@@ -44,18 +37,14 @@ class PlayTemplate extends React.Component {
         readyState: 2
       });
     }, 700);
-  };
+  }
 
   getNumberOfRecords() {
     return pathOr(0, ["state", "userData", "items", "length"], this);
   }
 
   viewRecord = async index => {
-    const { tracks } = await spotify.getTopTracks({
-      id: this.state.userData.items[index].id
-    });
-
-    const tempo = await spotify.play(tracks[0]);
+    await spotify.play(/* TRACK ID */);
 
     this.setState({
       viewingRecordIndex: index,

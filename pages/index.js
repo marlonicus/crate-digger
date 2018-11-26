@@ -30,7 +30,7 @@ export default class Page extends React.Component {
         {!this.state.mounted ? (
           <Loader />
         ) : this.state.isLoggedIn ? (
-          <PlayTemplate accessToken={this.state.isLoggedIn} />
+          <PlayTemplate />
         ) : (
           <LoginTemplate />
         )}

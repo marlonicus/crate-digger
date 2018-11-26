@@ -27,7 +27,7 @@ class Record extends Component {
     super();
 
     this.state = {
-      // peek: false
+      flipped: false
     };
   }
 
