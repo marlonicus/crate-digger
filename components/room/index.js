@@ -25,6 +25,6 @@ export default ({ isMusicPlaying, bpm }) => (
     <Sky />
     <Monitors animate={isMusicPlaying} animationSpeed={(60 / bpm) * 1000 * 2} />
     <Instructions />
-    <Floor />
+    {/* <Floor /> */}
   </>
 );

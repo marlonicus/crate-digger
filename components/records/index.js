@@ -6,8 +6,8 @@ import CloseButton from "../close-button";
 import { mapIndexed } from "../../utils/misc";
 import SoundManager from "../../utils/sound";
 
-const baseRecordPosition = 0.22;
-const recordSize = 0.65;
+const baseRecordPosition = 0.5;
+const recordSize = 1.8;
 
 const RecordSleeveEntity = props => (
   <Entity
@@ -15,7 +15,7 @@ const RecordSleeveEntity = props => (
       primitive: "box",
       width: recordSize,
       height: recordSize,
-      depth: 0.01
+      depth: 0.05
     }}
     position="0 0 0"
     rotation="0 0 0"
@@ -46,19 +46,17 @@ class Record extends Component {
       crateIndex
     } = this.props;
 
-    const yPos = -0.22;
-    const xPos = baseRecordPosition - index / 50;
+    const yPos = 0.1;
+    const xPos = baseRecordPosition - index / 15;
 
     return (
       <Entity
         position={`${xPos} ${yPos} 0`}
         scale={{ x: 1, y: 1, z: 1 }}
-        rotation="15 269 180"
+        rotation="15 89 0"
         animation__peek-rotate-sideways={{
           property: "rotation",
-          to: `${
-            isPeekingEnabled && peekIndex < index ? "-5.260" : "15"
-          } 269 180`,
+          to: `${isPeekingEnabled && peekIndex < index ? "-5.260" : "15"} 89 0`,
           loop: false,
           dur: 100,
           delay: 0,
@@ -67,7 +65,7 @@ class Record extends Component {
         animation__peek-bring-forward={{
           property: "position",
           to: `${
-            isPeekingEnabled && peekIndex < index ? xPos - 0.1 : xPos
+            isPeekingEnabled && peekIndex < index ? xPos - 0.4 : xPos
           } ${yPos} 0`,
           loop: false,
           dur: 100,
