@@ -6,6 +6,7 @@ const SoundManager = (() => {
   const whip = new Audio("/static/sounds/whip-double-trim.m4a");
   const whoosh = new Audio("/static/sounds/whoosh.mp3");
   whoosh.volume = 0.4;
+  whip.volume = 0.2;
 
   return {
     whoosh: () => whoosh.play(),

@@ -41,7 +41,8 @@ class Record extends Component {
       onOpen,
       onClose,
       onPeek,
-      peekIndex
+      peekIndex,
+      crateIndex
     } = this.props;
 
     const yPos = -0.22;
@@ -80,7 +81,7 @@ class Record extends Component {
           events={{
             click: () => {
               SoundManager.whoosh();
-              onSelect(index);
+              onSelect({ recordIndex: index, crateIndex });
             },
             mouseenter: () => {
               onPeek(index);
@@ -93,7 +94,8 @@ class Record extends Component {
           material={{ src, side: "double" }}
           className={`${isSelected && "clickable"}`}
           events={{
-            click: () => isSelected && onOpen(index)
+            click: () =>
+              isSelected && onOpen({ recordIndex: index, crateIndex })
           }}
           animation__active-slide-up={{
             property: "position",
@@ -129,7 +131,8 @@ export default class Records extends React.Component {
       openRecordIndex,
       onRecordSelect,
       onRecordClose,
-      onRecordOpen
+      onRecordOpen,
+      crateIndex
     } = this.props;
     const { peekIndex } = this.state;
 
@@ -138,7 +141,7 @@ export default class Records extends React.Component {
         {mapIndexed(
           (trackData, index) => (
             <Record
-              src={trackData.src}
+              src={trackData.album.images[0].url}
               isPeekingEnabled={index !== viewingRecordIndex}
               isSelected={index === viewingRecordIndex}
               whooshEnabled={viewingRecordIndex === false}
@@ -148,6 +151,7 @@ export default class Records extends React.Component {
               onClose={onRecordClose}
               key={index}
               index={index}
+              crateIndex={crateIndex}
               peekIndex={peekIndex}
               onPeek={newPeekIndex =>
                 this.setState({

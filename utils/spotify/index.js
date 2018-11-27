@@ -140,7 +140,7 @@ export default {
   },
 
   pause: () => {
-    player.pause();
+    player && player.pause();
   },
 
   setVolume: value => {
@@ -154,6 +154,8 @@ export default {
     const genres = await getRandomGenres();
     const crates = await createBasicGenreCrates({ genres });
     const cratesWithAnalyses = await addTrackAnalysesToCrates({ crates });
+
+    console.log(cratesWithAnalyses);
 
     return cratesWithAnalyses;
   }

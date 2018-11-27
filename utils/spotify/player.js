@@ -18,4 +18,5 @@ export default ({ accessToken, onReady, onError }) => {
   });
 
   player.connect();
+  return player;
 };
