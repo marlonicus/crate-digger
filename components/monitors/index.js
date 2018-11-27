@@ -45,7 +45,12 @@ export default class Monitors extends React.Component {
     const { animate } = this.props;
     const { animationState } = this.state;
     return (
-      <Entity position={animate && animationState ? "0 0.08 0" : "0 0 0"}>
+      <Entity
+        rotation="0 90 0"
+        position={`-3.4136829253123455 ${
+          animate && animationState ? "0.08" : "0"
+        } 3.5545438814079358`}
+      >
         <Entity position="-2 -2.8 -0.5" rotation="0 -0 0">
           <Monitor />
         </Entity>

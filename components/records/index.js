@@ -121,7 +121,7 @@ export default class Records extends React.Component {
     super(props);
 
     this.state = {
-      peekIndex: 20
+      peekIndex: 10
     };
   }
 
@@ -144,11 +144,12 @@ export default class Records extends React.Component {
           (trackData, index) => (
             <Record
               src={pathOr(null, ["album", "images", 1, "url"], trackData)}
-              isPeekingEnabled={index !== viewingRecordIndex}
+              isPeekingEnabled={
+                index !== viewingRecordIndex || crateIndex !== openCrateIndex
+              }
               isSelected={
                 index === viewingRecordIndex && crateIndex === openCrateIndex
               }
-              whooshEnabled={viewingRecordIndex === false}
               isOpen={
                 openRecordIndex === index && crateIndex === openCrateIndex
               }
