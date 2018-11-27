@@ -58,7 +58,7 @@ const getGenreSeeds = async () =>
 
 const getRandomGenres = async () => {
   const { genres } = await getGenreSeeds();
-  return takeRandX(5)(genres);
+  return takeRandX(8)(genres);
 };
 
 const addTrackAnalysesToCrates = async ({ crates }) => {

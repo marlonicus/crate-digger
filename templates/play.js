@@ -8,6 +8,7 @@ import Crate from "../components/crate";
 import Records from "../components/records";
 import Camera from "../components/camera";
 import { mapIndexed } from "../utils/misc";
+import SoundManager from "../utils/sound";
 
 class PlayTemplate extends React.Component {
   constructor(props) {
@@ -46,29 +47,31 @@ class PlayTemplate extends React.Component {
       ["state", "crates", crateIndex, "content", "tracks", recordIndex],
       this
     );
+
     await spotify.play(targetRecord);
-    console.log("TARGET RECORD:", recordIndex, crateIndex, targetRecord);
 
     this.setState({
-      viewingRecordIndex: recordIndex
-      // tempo
+      viewingRecordIndex: recordIndex,
+      openCrateIndex: crateIndex,
+      tempo: targetRecord.tempo
     });
   }
 
   closeRecord() {
     spotify.pause();
+    SoundManager.scratch();
     this.setState({ viewingRecordIndex: false });
   }
 
   async openRecord({ recordIndex, crateIndex }) {
     this.setState({
-      openRecordIndex: recordIndex
-      // openCrateIndex: crateIndex
+      openRecordIndex: recordIndex,
+      openCrateIndex: crateIndex
     });
   }
 
   renderCrate(crate, index) {
-    const { viewingRecordIndex, openRecordIndex } = this.state;
+    const { viewingRecordIndex, openRecordIndex, openCrateIndex } = this.state;
     const { tracks } = crate.content;
 
     return (
@@ -76,6 +79,7 @@ class PlayTemplate extends React.Component {
         {crate.content && (
           <Records
             crateIndex={index}
+            openCrateIndex={openCrateIndex}
             viewingRecordIndex={viewingRecordIndex}
             openRecordIndex={openRecordIndex}
             onRecordSelect={bind(this.viewRecord, this)}
@@ -89,7 +93,7 @@ class PlayTemplate extends React.Component {
   }
 
   render() {
-    const { crates, viewingRecordIndex, readyState } = this.state;
+    const { crates, viewingRecordIndex, readyState, tempo } = this.state;
 
     return (
       <>
@@ -117,7 +121,7 @@ class PlayTemplate extends React.Component {
           </>
         )}
         <Scene vr-mode-ui={{ enabled: true }}>
-          <Room isMusicPlaying={viewingRecordIndex !== false} bpm={100} />
+          <Room isMusicPlaying={viewingRecordIndex !== false} bpm={tempo} />
 
           {crates && mapIndexed(bind(this.renderCrate, this), crates)}
 

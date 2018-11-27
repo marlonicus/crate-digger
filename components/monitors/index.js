@@ -45,17 +45,7 @@ export default class Monitors extends React.Component {
     const { animate } = this.props;
     const { animationState } = this.state;
     return (
-      <Entity
-        position="0 0 0 "
-        animation__bounce={{
-          property: "position",
-          to: `0 ${animate ? (animationState ? "0.07" : "0") : "0"} 0`,
-          loop: animate,
-          dur: 0,
-          delay: 0,
-          dir: "normal"
-        }}
-      >
+      <Entity position={animate && animationState ? "0 0.08 0" : "0 0 0"}>
         <Entity position="-2 -2.8 -0.5" rotation="0 -0 0">
           <Monitor />
         </Entity>

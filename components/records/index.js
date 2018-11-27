@@ -1,6 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React, { Component } from "react";
 import { Entity } from "aframe-react";
+import { pathOr } from "ramda";
 import CloseButton from "../close-button";
 import { mapIndexed } from "../../utils/misc";
 import SoundManager from "../../utils/sound";
@@ -129,6 +130,7 @@ export default class Records extends React.Component {
       tracks,
       viewingRecordIndex,
       openRecordIndex,
+      openCrateIndex,
       onRecordSelect,
       onRecordClose,
       onRecordOpen,
@@ -141,11 +143,15 @@ export default class Records extends React.Component {
         {mapIndexed(
           (trackData, index) => (
             <Record
-              src={trackData.album.images[0].url}
+              src={pathOr(null, ["album", "images", 1, "url"], trackData)}
               isPeekingEnabled={index !== viewingRecordIndex}
-              isSelected={index === viewingRecordIndex}
+              isSelected={
+                index === viewingRecordIndex && crateIndex === openCrateIndex
+              }
               whooshEnabled={viewingRecordIndex === false}
-              isOpen={openRecordIndex === index}
+              isOpen={
+                openRecordIndex === index && crateIndex === openCrateIndex
+              }
               onSelect={onRecordSelect}
               onOpen={onRecordOpen}
               onClose={onRecordClose}
