@@ -3,17 +3,18 @@ import { Entity } from "aframe-react";
 
 const CloseButton = props => (
   <Entity
-    position="0.28 0.28 0.01"
+    position="-0.7 0.9 -0.1"
+    rotation="0 180 0"
     geometry={{
       primitive: "plane",
-      width: "0.05",
-      height: "0.05w",
+      width: "0.25",
+      height: "0.05",
       color: "#ffff00"
     }}
     material={{ color: "black", roughness: 0.5 }}
     {...props}
   >
-    <Entity text={{ value: "x" }} position="0.482 0.005 0" />
+    <Entity text={{ value: "close" }} position="0.482 0.005 0" />
   </Entity>
 );
 
