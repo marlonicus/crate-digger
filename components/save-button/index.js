@@ -1,18 +1,18 @@
 import React from "react";
 import { Entity } from "aframe-react";
 
-const CloseButton = ({ onClick }) => (
+const SaveButton = ({ onClick }) => (
   <Entity
     geometry={{
       primitive: "plane",
-      width: 0.2,
+      width: 0.45,
       height: 0.2
     }}
     className="clickable"
-    position="-0.81 1.05 -0.1"
+    position="0.65 1.05 -0.1"
     rotation="0 180 0"
     material={{
-      src: "/static/images/close.gif",
+      src: "/static/images/save.gif",
       opacity: 0.8
     }}
     events={{ click: onClick }}
@@ -23,4 +23,4 @@ const CloseButton = ({ onClick }) => (
   />
 );
 
-export default CloseButton;
+export default SaveButton;

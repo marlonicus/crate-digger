@@ -2,9 +2,9 @@
 import React, { Component } from "react";
 import { Entity } from "aframe-react";
 import { pathOr } from "ramda";
-import CloseButton from "../close-button";
-import { mapIndexed } from "../../utils/misc";
+import RecordControls from "../record-controls";
 import SoundManager from "../../utils/sound";
+import { mapIndexed } from "../../utils/misc";
 
 const baseRecordPosition = 0.5;
 const recordSize = 1.8;
@@ -72,13 +72,31 @@ class Record extends Component {
           delay: 0,
           dir: "alternate"
         }}
+        animation__active-slide-up={{
+          property: "position",
+          to: `${xPos} ${isSelected ? "2" : "0"} 0`,
+          loop: false,
+          dur: 100,
+          delay: 0,
+          dir: "alternate"
+        }}
+        animation__active-slide-up-alt={{
+          property: "rotation",
+          to: `${isSelected ? "0" : "15"} 89 0`,
+          loop: false,
+          dur: 100,
+          delay: 0,
+          dir: "alternate"
+        }}
       >
         {/* Hit area for peeking */}
         <RecordSleeveEntity
           material="shader: flat; opacity: 0; color: #0000ff"
-          className="clickable"
+          className={`${!isSelected && "clickable"}`}
+          position={`0 0 ${isSelected ? "1" : "0"}`}
           events={{
             click: () => {
+              if (isSelected) return;
               SoundManager.whoosh();
               onSelect({ recordIndex: index, crateIndex });
             },
@@ -92,23 +110,25 @@ class Record extends Component {
         <RecordSleeveEntity
           material={{ src, side: "double" }}
           className={`${isSelected && "clickable"}`}
-          events={{
-            click: () =>
-              isSelected && onOpen({ recordIndex: index, crateIndex })
-          }}
-          animation__active-slide-up={{
-            property: "position",
-            to: `0 ${isSelected ? "0.7" : "0"} 0`,
+          animation__peek-flip={{
+            property: "rotation",
+            to: `0 ${this.state.flipped ? "180" : "0"} 0`,
             loop: false,
-            dur: 100,
+            dur: 300,
             delay: 0,
             dir: "alternate"
           }}
-        >
-          {isSelected && (
-            <CloseButton className="clickable" events={{ click: onClose }} />
-          )}
-        </RecordSleeveEntity>
+          events={{
+            click: () =>
+              isSelected &&
+              this.setState(({ flipped }) => ({
+                flipped: !flipped
+              }))
+          }}
+        />
+        {isSelected && (
+          <RecordControls closeHandler={onClose} saveHandler={() => {}} />
+        )}
       </Entity>
     );
   }
