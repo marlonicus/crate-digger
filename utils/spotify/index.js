@@ -151,10 +151,20 @@ const createBasicGenreCrates = async ({ genres }) => {
   return crates;
 };
 
-const addImageLabelsToCrates = async ({ crates }) =>
+// @TODO: Make this function functional.
+const addAlbumInfoToCrateTracks = ({ crate }) => {
+  const newTracks = map(track => ({
+    ...track,
+    albumArtImage: canvas.albumInfo(track)
+  }), crate.content.tracks)
+  crate.content.tracks = newTracks;
+  return crate;
+}
+
+const addImageLabelsToCrates = ({ crates }) =>
   map(crate => ({
-    ...crate,
-    labelImage: canvas.text(crate.genre),
+    ...addAlbumInfoToCrateTracks({ crate }),
+    labelImage: canvas.label(crate.genre),
     labelRotation: Math.random() * 7 - 3.5
   }), crates)
 
@@ -218,7 +228,7 @@ export default {
   getCrates: async () => {
     let cratesWithAnalyses = mock;
 
-    if (process.env.DEV) {
+    if (!process.env.DEV) {
       const { country, id } = await getMe();
       market = country;
       userId = id;
@@ -227,6 +237,7 @@ export default {
       const crates = await createBasicGenreCrates({ genres });
       cratesWithAnalyses = await addTrackAnalysesToCrates({ crates });
     }
+    console.log(cratesWithAnalyses)
 
     const cratesWithImageLabels = await addImageLabelsToCrates({ crates: cratesWithAnalyses })
 

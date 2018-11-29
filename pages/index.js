@@ -49,7 +49,8 @@ export default class Page extends React.Component {
         ) : (
           <LoginTemplate />
         )}
-        <canvas id="canvas" width="800" height="400" />
+        <canvas id="canvas-crate-label" width="800" height="400" />
+        <canvas id="canvas-album-info" width="800" height="800" />
       </main>
     );
   }

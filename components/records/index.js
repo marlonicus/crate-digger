@@ -45,7 +45,8 @@ class Record extends Component {
       onClose,
       onPeek,
       peekIndex,
-      crateIndex
+      crateIndex,
+      albumArtImage
     } = this.props;
 
     const yPos = 0.1;
@@ -95,7 +96,7 @@ class Record extends Component {
         <RecordSleeveEntity
           material="shader: flat; opacity: 0; color: #0000ff"
           className={`${!isSelected && "clickable"}`}
-          position={`0 0 ${isSelected ? "1" : "0"}`}
+          position={`0 0.05 ${isSelected ? "1" : "-0.05"}`}
           events={{
             click: () => {
               if (isSelected) return;
@@ -127,7 +128,21 @@ class Record extends Component {
                 flipped: !flipped
               }))
           }}
+        >
+        <Entity
+          geometry={{
+            primitive: "plane",
+            width: recordSize,
+            height: recordSize,
+          }}
+
+          position="0 0 0.03"
+          rotation="0 0 0"
+          material={{
+            src: albumArtImage
+          }}
         />
+        </RecordSleeveEntity>
         {isSelected && (
           <RecordControls
             closeHandler={onClose}
@@ -166,6 +181,7 @@ export default class Records extends React.Component {
         {mapIndexed(
           (trackData, index) => (
             <Record
+              albumArtImage={trackData.albumArtImage}
               uri={trackData.uri}
               src={pathOr(null, ["album", "images", 1, "url"], trackData)}
               isPeekingEnabled={
