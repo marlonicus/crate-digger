@@ -70,15 +70,7 @@ const Camera = () => (
     rotation="0 0 0"
     wasd-controls
   >
-    <a-cursor color="red">
-      <a-animation
-        begin="cursor-hovering"
-        easing="ease-bounce"
-        attribute="scale"
-        dur="100"
-        from="0.6 0.6 0.6"
-        to="0.4 0.4 0.4"
-      />
+    <a-cursor>
     </a-cursor>
   </Entity>
 );
