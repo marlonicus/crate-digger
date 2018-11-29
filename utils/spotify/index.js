@@ -1,8 +1,10 @@
 /* global fetch */
 import queryString from "query-string";
-import { join, omit, map, prop } from "ramda";
+import { join, omit, map, prop, find, propEq } from "ramda";
 import createPlayer from "./player";
 import { takeRandX, mapIndexed } from "../misc";
+
+const CUSTOM_PLAYLIST_NAME = "Crate Digger  💎";
 
 let player;
 let market = "";
@@ -69,7 +71,7 @@ const createPlaylist = async () => {
         "Content-Type": "application/json"
       }),
       body: JSON.stringify({
-        name: "Crate Digger  💎",
+        name: CUSTOM_PLAYLIST_NAME,
         description: "Gems found with crate-digger.netlify.com"
       })
     }
@@ -89,6 +91,18 @@ const addToPlaylist = async ({ uri }) =>
       uris: [uri]
     })
   });
+
+const findCustomPlaylist = async () => {
+  const { items } = await fetchWebApi(
+    `https://api.spotify.com/v1/me/playlists`
+  );
+  const searchResult = find(propEq("name", CUSTOM_PLAYLIST_NAME), items);
+  if (searchResult) {
+    customPlaylist = searchResult.id;
+    return searchResult.id;
+  }
+  return false;
+};
 
 const getRandomGenres = async () => {
   const { genres } = await getGenreSeeds();
@@ -144,7 +158,10 @@ export default {
 
   saveToPlaylist: async ({ uri }) => {
     if (!customPlaylist) {
-      await createPlaylist();
+      const foundPlaylist = await findCustomPlaylist();
+      if (!foundPlaylist) {
+        await createPlaylist();
+      }
     }
 
     addToPlaylist({ uri });
