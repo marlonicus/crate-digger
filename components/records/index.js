@@ -5,6 +5,7 @@ import { pathOr } from "ramda";
 import RecordControls from "../record-controls";
 import SoundManager from "../../utils/sound";
 import { mapIndexed } from "../../utils/misc";
+import spotify from "../../utils/spotify";
 
 const baseRecordPosition = 0.5;
 const recordSize = 1.8;
@@ -36,6 +37,7 @@ class Record extends Component {
     const {
       isPeekingEnabled,
       isSelected,
+      uri,
       src,
       index,
       onSelect,
@@ -72,7 +74,7 @@ class Record extends Component {
           delay: 0,
           dir: "alternate"
         }}
-        animation__active-slide-up={{
+        animation__active-slide-up-if-selected={{
           property: "position",
           to: `${xPos} ${isSelected ? "2" : "0"} 0`,
           loop: false,
@@ -80,7 +82,7 @@ class Record extends Component {
           delay: 0,
           dir: "alternate"
         }}
-        animation__active-slide-up-alt={{
+        animation__active-face-forward-if-selected={{
           property: "rotation",
           to: `${isSelected ? "0" : "15"} 89 0`,
           loop: false,
@@ -127,7 +129,10 @@ class Record extends Component {
           }}
         />
         {isSelected && (
-          <RecordControls closeHandler={onClose} saveHandler={() => {}} />
+          <RecordControls
+            closeHandler={onClose}
+            saveHandler={() => spotify.saveToPlaylist({ uri })}
+          />
         )}
       </Entity>
     );
@@ -161,6 +166,7 @@ export default class Records extends React.Component {
         {mapIndexed(
           (trackData, index) => (
             <Record
+              uri={trackData.uri}
               src={pathOr(null, ["album", "images", 1, "url"], trackData)}
               isPeekingEnabled={
                 index !== viewingRecordIndex || crateIndex !== openCrateIndex

@@ -6,6 +6,8 @@ import { takeRandX, mapIndexed } from "../misc";
 
 let player;
 let market = "";
+let userId = "";
+let customPlaylist = false;
 let accessToken = "";
 
 const login = () => {
@@ -19,7 +21,8 @@ const login = () => {
       "user-top-read",
       "user-read-private",
       "user-read-birthdate",
-      "user-read-email"
+      "user-read-email",
+      "playlist-modify-public"
     ]
   };
 
@@ -28,9 +31,10 @@ const login = () => {
   window.location.href = `https://accounts.spotify.com/authorize?${query}&scope=${scope}`;
 };
 
-const getHeaders = () => ({
+const getHeaders = ({ args } = {}) => ({
   headers: {
-    Authorization: `Bearer ${accessToken}`
+    Authorization: `Bearer ${accessToken}`,
+    ...args
   }
 });
 
@@ -55,6 +59,36 @@ const getGenreSeeds = async () =>
   fetchWebApi(
     `https://api.spotify.com/v1/recommendations/available-genre-seeds`
   );
+
+const createPlaylist = async () => {
+  const response = await fetch(
+    `https://api.spotify.com/v1/users/${userId}/playlists`,
+    {
+      method: "POST",
+      ...getHeaders({
+        "Content-Type": "application/json"
+      }),
+      body: JSON.stringify({
+        name: "Crate Digger  💎",
+        description: "Gems found with crate-digger.netlify.com"
+      })
+    }
+  );
+
+  const { id } = await response.json();
+  customPlaylist = id;
+};
+
+const addToPlaylist = async ({ uri }) =>
+  fetch(`https://api.spotify.com/v1/playlists/${customPlaylist}/tracks`, {
+    method: "POST",
+    ...getHeaders({
+      "Content-Type": "application/json"
+    }),
+    body: JSON.stringify({
+      uris: [uri]
+    })
+  });
 
 const getRandomGenres = async () => {
   const { genres } = await getGenreSeeds();
@@ -108,6 +142,14 @@ export default {
     accessToken = token;
   },
 
+  saveToPlaylist: async ({ uri }) => {
+    if (!customPlaylist) {
+      await createPlaylist();
+    }
+
+    addToPlaylist({ uri });
+  },
+
   connect: () =>
     new Promise((resolve, reject) => {
       window.onSpotifyWebPlaybackSDKReady = () => {
@@ -148,8 +190,9 @@ export default {
   },
 
   getCrates: async () => {
-    const { country } = await getMe();
+    const { country, id } = await getMe();
     market = country;
+    userId = id;
 
     const genres = await getRandomGenres();
     const crates = await createBasicGenreCrates({ genres });
