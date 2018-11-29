@@ -75,7 +75,7 @@ class PlayTemplate extends React.Component {
     const { tracks } = crate.content;
 
     return (
-      <Crate index={index}>
+      <Crate index={index} labelImage={crate.labelImage} labelRotation={crate.labelRotation}>
         {crate.content && (
           <Records
             crateIndex={index}

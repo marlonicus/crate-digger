@@ -3,8 +3,10 @@ import queryString from "query-string";
 import { join, omit, map, prop, find, propEq } from "ramda";
 import createPlayer from "./player";
 import { takeRandX, mapIndexed } from "../misc";
+import canvas from "../canvas";
+import mock from "../../data/mock";
 
-const CUSTOM_PLAYLIST_NAME = "Crate Digger  💎";
+const CUSTOM_PLAYLIST_NAME = "Crate Digger 💎";
 
 let player;
 let market = "";
@@ -149,6 +151,13 @@ const createBasicGenreCrates = async ({ genres }) => {
   return crates;
 };
 
+const addImageLabelsToCrates = async ({ crates }) =>
+  map(crate => ({
+    ...crate,
+    labelImage: canvas.text(crate.genre),
+    labelRotation: Math.random() * 7 - 3.5
+  }), crates)
+
 export default {
   login,
 
@@ -207,16 +216,20 @@ export default {
   },
 
   getCrates: async () => {
-    const { country, id } = await getMe();
-    market = country;
-    userId = id;
+    let cratesWithAnalyses = mock;
 
-    const genres = await getRandomGenres();
-    const crates = await createBasicGenreCrates({ genres });
-    const cratesWithAnalyses = await addTrackAnalysesToCrates({ crates });
+    if (process.env.DEV) {
+      const { country, id } = await getMe();
+      market = country;
+      userId = id;
 
-    console.log(cratesWithAnalyses);
+      const genres = await getRandomGenres();
+      const crates = await createBasicGenreCrates({ genres });
+      cratesWithAnalyses = await addTrackAnalysesToCrates({ crates });
+    }
 
-    return cratesWithAnalyses;
+    const cratesWithImageLabels = await addImageLabelsToCrates({ crates: cratesWithAnalyses })
+
+    return cratesWithImageLabels;
   }
 };

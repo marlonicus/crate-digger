@@ -30,6 +30,18 @@ export default class Page extends React.Component {
 
     return (
       <main>
+      <style jsx>{`
+        canvas {
+          background: red;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 2;
+          display: none;
+        }
+      `}</style>
         {!mounted ? (
           <Loader />
         ) : isLoggedIn ? (
@@ -37,6 +49,7 @@ export default class Page extends React.Component {
         ) : (
           <LoginTemplate />
         )}
+        <canvas id="canvas" width="800" height="400" />
       </main>
     );
   }
