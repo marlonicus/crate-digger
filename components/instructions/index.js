@@ -3,7 +3,7 @@ import { Entity } from "aframe-react";
 
 const Instructions = () => (
   <>
-    {/* Keyboard instructions */}
+    {/* Keyboard instructions
     <Entity
       geometry={{
         primitive: "plane",
@@ -16,20 +16,7 @@ const Instructions = () => (
         src: "/static/images/movement.gif"
       }}
     />
-
-    {/* Mouse instructions */}
-    <Entity
-      geometry={{
-        primitive: "plane",
-        width: 1,
-        height: 1
-      }}
-      position="0 0.6 -1.3"
-      rotation="-3 0 0"
-      material={{
-        src: "/static/images/sight.gif"
-      }}
-    />
+    */}
   </>
 );
 
